@@ -2,15 +2,17 @@
 
 #define WINDOWS_TIMER 0
 
-#if WINDOWS_TIMER
+#if WINDOWS_TIMER == 0
 #include <Windows.h>
+#elif WINDOWS_TIMER == 1
+#include <SFML/Graphics.hpp>
 #else
 #include <chrono>
 #endif
 
 namespace utils
 {
-#if WINDOWS_TIMER
+#if WINDOWS_TIMER == 0
 	class Timer
 	{
 	private:
@@ -39,6 +41,27 @@ namespace utils
 			return (float)(cycles * _frequency);
 		}
 	};
+#elif WINDOWS_TIMER == 1
+	class Timer
+	{
+	private:
+		sf::Clock clock;
+	public:
+		Timer()
+		{
+			reset();
+		}
+
+		void reset()
+		{
+			clock.restart();
+		}
+
+		float elapsed()
+		{
+			return clock.getElapsedTime().asSeconds();
+		}
+	}
 #else
 	class Timer
 	{

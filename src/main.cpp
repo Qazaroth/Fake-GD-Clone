@@ -5,34 +5,53 @@
 
 // 1 to use SF
 // 0 to use utils/Timer
-#define ALTERNATE_FPS 1
+#define ALTERNATE_FPS 2
 
-#if ALTERNATE_FPS == 0
 #include "utils/Timer.h"
-#endif
 
 #define print(x) std::cout << x << std::endl
 
 float _timer = 0.0f;
-
 unsigned int frames = 0;
 
 int main()
 {
-	sf::Clock clock;
-#if ALTERNATE_FPS == 1
-	sf::Time timer;
-#else
 	utils::Timer timer;
-#endif
 
-	sf::Window window(sf::VideoMode(800, 600), "Fake GD Clone");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
 
+	/*
 	sf::Vector2u windowSize = window.getSize();
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
 
 	print("WIDTH: " << windWidth << ", HEIGHT: " << windHeight);
+	*/
+
+	sf::Sprite plr;
+	sf::Texture plrTexture;
+	sf::Font font;
+	sf::Text fps;
+
+	if (!plrTexture.loadFromFile("res/000.png"))
+	{
+		print("Error occured while loading player texture file!");
+		return -1;
+	}
+
+	if (!font.loadFromFile("res/fonts/arial.ttf"))
+	{
+		print("Error occured while loading font file!");
+		return -1;
+	}
+
+	plr.setTexture(plrTexture);
+	plr.setColor(sf::Color::Green);
+	plr.setPosition(sf::Vector2f(window.getSize().x - plrTexture.getSize().x, window.getSize().y - plrTexture.getSize().y));
+
+	fps.setFont(font);
+	fps.setCharacterSize(24);
+	fps.setString("0 FPS");
 
 	while (window.isOpen())
 	{
@@ -65,30 +84,39 @@ int main()
 				{
 					// Left click
 					break;
+				}
 			}
-
 			default:
 				break;
 			}
 		}
-		
-#if ALTERNATE_FPS == 1
-		timer = clock.getElapsedTime();
-		if (timer.asSeconds() - _timer > 1.0f)
+
+		window.clear(sf::Color::Black);
+		window.draw(plr);
+		window.draw(fps);
+		window.display();
+
+		if (timer.elapsed() - _timer > 1.0f)
 		{
 			_timer += 1.0f;
-			print(frames << " FPS");
-			frames = 0;
-		}
-#else
-		if (timer.elapsed() - _timer > 1.0f) 
-		{
-			_timer += 1.0f;
-			print(frames << " FPS");
+			if (frames < 60)
+			{
+				fps.setFillColor(sf::Color(255, 0, 0));
+			}
+			else if (frames >= 60 && frames < 120)
+			{
+				fps.setFillColor(sf::Color(0, 255, 0));
+			}
+			else
+			{
+				fps.setFillColor(sf::Color(255, 215, 0));
+			}
+
+			fps.setString(std::to_string(frames) + " FPS");
+			//print(frames << " FPS");
 			timer.reset();
 			frames = 0;
 		}
-#endif
 	}
 
 	return 0;
