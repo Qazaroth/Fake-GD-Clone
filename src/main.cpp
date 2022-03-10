@@ -20,11 +20,12 @@ int main()
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
 
-	/*
+	
 	sf::Vector2u windowSize = window.getSize();
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
 
+	/*
 	print("WIDTH: " << windWidth << ", HEIGHT: " << windHeight);
 	*/
 
@@ -45,9 +46,15 @@ int main()
 		return -1;
 	}
 
+	float plrScale = 0.25f;
+	sf::Vector2f plrScaleVec(plrScale, plrScale);
+
+	plr.setOrigin(plrTexture.getSize().x / 2, plrTexture.getSize().y / 2);
+
 	plr.setTexture(plrTexture);
 	plr.setColor(sf::Color::Green);
-	plr.setPosition(sf::Vector2f(window.getSize().x - plrTexture.getSize().x, window.getSize().y - plrTexture.getSize().y));
+	plr.setScale(plrScaleVec);
+	plr.setPosition(sf::Vector2f(plrTexture.getSize().x, window.getSize().y - plrTexture.getSize().y));
 
 	fps.setFont(font);
 	fps.setCharacterSize(24);
