@@ -11,7 +11,7 @@
 
 int main()
 {
-	Level mainLvl("src/Data/Lvls/0.json", "res/audio/0.ogg");
+	Level mainLvl("src/Data/Lvls/0.json");
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
 	sf::Vector2u windowSize = window.getSize();
@@ -22,7 +22,6 @@ int main()
 	print(mainLvl.getLevelJSON());
 	print(mainLvl.getLevelPath());
 	print(mainLvl.getAudioPath());
-	print(mainLvl.getLevelData());
 
 	/*
 	print("WIDTH: " << windWidth << ", HEIGHT: " << windHeight);
@@ -63,6 +62,9 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event e;
+
+		print(mainLvl.getLevelTick());
+		mainLvl.update();
 
 		window.clear();
 		window.draw(plr);

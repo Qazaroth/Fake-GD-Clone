@@ -9,25 +9,32 @@
 
 class Level
 {
-private:
+protected:
+	std::string _lvlData = "";
+
 	bool _IsInit = false;
 
 	unsigned int _lvlTimer = 0; // Helps to keep track of when to place object(s)
-
+private:
 	std::string _levelPath = "";
 	std::string _audioPath = "";
 	
-	std::string _lvlData = "";
+	std::string _lvlName = "";
 	nlohmann::json _lvlJson;
 	sf::Music _bgMusic;
 
 	void setup();
 public:
-	Level(std::string levelPath, std::string audioPath);
+	Level(std::string levelPath);
 	~Level();
+
+	void update();
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }
 
+	inline int getLevelTick() { return _lvlTimer; }
+
+	inline std::string getLevelName() { return _lvlName; }
 	inline std::string getLevelPath() { return _levelPath; }
 	inline std::string getAudioPath() { return _audioPath; }
 	inline std::string getLevelData() { return _lvlData; }

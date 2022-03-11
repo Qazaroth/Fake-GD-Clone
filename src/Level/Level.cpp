@@ -4,15 +4,9 @@
 void Level::setup()
 {
 	_IsInit = false;
-	if (_levelPath == "" && _audioPath == "")
+	if (_levelPath == "")
 	{
 		std::cout << "[ERROR] Unable to load a level due to missing arguments!" << std::endl;
-		return;
-	}
-
-	if (!_bgMusic.openFromFile(_audioPath))
-	{
-		std::cout << "[ERROR] An error occured while loading audio file!" << std::endl;
 		return;
 	}
 
@@ -23,18 +17,43 @@ void Level::setup()
 		std::cout << "[ERROR] An error occured while loading level data!" << std::endl;
 		return;
 	}
-
-	_IsInit = true;
 	_lvlJson = nlohmann::json::parse(_lvlData);
+
+	_lvlName = _lvlJson["name"];
+	_audioPath = _lvlJson["audio"];
+
+	if (!_bgMusic.openFromFile(_audioPath))
+	{
+		std::cout << "[ERROR] An error occured while loading audio file!" << std::endl;
+		return;
+	}
+
+	_bgMusic.setVolume(37.5f);
+
 	std::cout << "[SUCCESS] Succesfully loaded level!" << std::endl;
+	_IsInit = true;
 }
 //Public
-Level::Level(std::string levelPath, std::string audioPath)
+Level::Level(std::string levelPath)
 {
 	_levelPath = levelPath;
-	_audioPath = audioPath;
 
 	setup();
 }
 
 Level::~Level() {}
+
+void Level::update()
+{
+	if (_IsInit)
+	{
+		if (_bgMusic.getStatus() == sf::SoundSource::Playing)
+		{
+			_lvlTimer += 1;
+		}
+		else
+		{
+			_bgMusic.play();
+		}
+	}
+}
