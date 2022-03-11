@@ -12,7 +12,7 @@ int main()
 {
 	Level mainLvl("res/data/levels/0.json");
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Fake GD Clone", sf::Style::Default);
 	sf::Vector2u windowSize = window.getSize();
 
 	unsigned int windWidth = windowSize.x;
@@ -58,11 +58,55 @@ int main()
 	plr.setTexture(plrTexture);
 	plr.setColor(sf::Color::Green);
 	plr.setScale(plrScaleVec);
-	plr.setPosition(sf::Vector2f(plrTexture.getSize().x, windHeight - plrTexture.getSize().y));
+
+	int plrOffsetX = 5;
+	int plrOffsetY = (windHeight / 4);
+
+	float plrDefaultPosX = plrOffsetX + ((plrTexture.getSize().x * plrScale) / 2);
+	float plrDefaultPosY = windHeight - plrOffsetY - (plrTexture.getSize().y * plrScale);
+
+	sf::Vector2f plrDefaultPos(plrDefaultPosX, plrDefaultPosY);
+
+	plr.setPosition(plrDefaultPos);
+
+	sf::Vector2f velocity(5.0f, 0.0f);
 
 	while (window.isOpen())
 	{
+		windowSize = window.getSize();
+
+		windWidth = windowSize.x;
+		windHeight = windowSize.y;
+
+		sf::Vector2i m = sf::Mouse::getPosition(window);
 		sf::Event e;
+
+		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+
+		float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y) - 30;
+		float maxX = windWidth - (plrTexture.getSize().x * plr.getScale().x);
+		float minX = (plrTexture.getSize().x * plr.getScale().x) - 30;
+		float minY = (plrTexture.getSize().y * plr.getScale().y) - 30;
+
+		plr.move(velocity);
+
+		if (plr.getPosition().y < minY)
+		{
+			plr.setPosition(plr.getPosition().x, minY);
+		}
+		else if (plr.getPosition().y > maxY)
+		{
+			plr.setPosition(plr.getPosition().x, maxY);
+		}
+
+		if (plr.getPosition().x < minX)
+		{
+			velocity.x = 5.0f;
+		}
+		else if (plr.getPosition().x > maxX)
+		{
+			velocity.x = -5.0f;
+		}
 
 		window.clear(sf::Color::White);
 		window.draw(bg);
@@ -94,8 +138,13 @@ int main()
 			{
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{
+					plr.move(sf::Vector2f(0.0f, -50.0f));
 					// Left click
 					break;
+				}
+				else if (e.mouseButton.button == sf::Mouse::Right)
+				{
+					plr.move(sf::Vector2f(0.0f, 50.0f));
 				}
 			}
 

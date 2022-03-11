@@ -5,9 +5,13 @@ namespace Objects
 	// Private
 	void Block::setup()
 	{
+		sf::RectangleShape r(sf::Vector2f(_size, _size));
+		_block = r;
 		_block.setSize(sf::Vector2f(_size, _size));
 		_block.setPosition(_x, _y);
 		_block.setFillColor(sf::Color::Black);
+		_block.setOutlineThickness(1.0f);
+		_block.setOutlineColor(sf::Color::White);
 
 		std::cout << (_block.getPosition().x > _windSize.x - _size) << std::endl;
 

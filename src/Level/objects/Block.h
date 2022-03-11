@@ -10,7 +10,7 @@ namespace Objects
 	{
 	private:
 		float _x, _y;
-		float _size = 10.0f;
+		float _size = 75.0f;
 
 		sf::RectangleShape _block;
 		sf::Vector2u _windSize;

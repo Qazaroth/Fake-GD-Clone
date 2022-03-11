@@ -72,13 +72,9 @@ void Level::update(sf::RenderWindow &window)
 			{
 				using namespace Objects;
 
-				sf::RectangleShape rect(sf::Vector2f(10.0f, 10.0f));
-				rect.setPosition(50, 50);
-				rect.setFillColor(sf::Color::Black);
-
 				Block block(posX, posY, window.getSize());
 				std::cout << "[" << key << "] " << val["type"] << std::endl;
-				window.draw(rect);
+				window.draw(block.getObject());
 			}
 			
 		}
