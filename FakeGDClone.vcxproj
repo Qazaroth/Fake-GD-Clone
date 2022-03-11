@@ -145,6 +145,7 @@
     <ClInclude Include="src\Level\Level.h" />
     <ClInclude Include="src\Level\objects\Block.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
+    <ClInclude Include="src\utils\Output.h" />
     <ClInclude Include="src\utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>

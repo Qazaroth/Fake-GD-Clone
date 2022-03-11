@@ -6,7 +6,7 @@ void Level::setup()
 	_IsInit = false;
 	if (_levelPath == "")
 	{
-		std::cout << "[ERROR] Unable to load a level due to missing arguments!" << std::endl;
+		Output::error("Unable to load a level due to missing arguments!");
 		return;
 	}
 
@@ -14,7 +14,7 @@ void Level::setup()
 
 	if (_lvlData.empty() || _lvlData == ERRSTRING)
 	{
-		std::cout << "[ERROR] An error occured while loading level data!" << std::endl;
+		Output::error("An error occured while loading level data!");
 		return;
 	}
 	_lvlJson = nlohmann::json::parse(_lvlData);
@@ -22,16 +22,17 @@ void Level::setup()
 	_lvlName = _lvlJson["name"];
 	_audioPath = _lvlJson["audio"];
 	_bgPath = _lvlJson["bg"];
+	_objsArr = _lvlJson["objects"];
 
 	if (!_bgMusic.openFromFile(_audioPath))
 	{
-		std::cout << "[ERROR] An error occured while loading audio file!" << std::endl;
+		Output::error("An error occured while loading audio file!");
 		return;
 	}
 
 	_bgMusic.setVolume(37.5f);
 
-	std::cout << "[SUCCESS] Succesfully loaded level!" << std::endl;
+	Output::log("Succesfully loaded level!");
 	_IsInit = true;
 }
 //Public
@@ -54,7 +55,28 @@ void Level::update(sf::RenderWindow &window)
 		}
 		else
 		{
-			_bgMusic.play();
+			//_bgMusic.play();
+		}
+
+		for (auto i : _objsArr.items())
+		{
+			auto key = i.key();
+			auto val = i.value();
+
+			auto type = val["type"];
+			auto posT = val["pos_T"];
+			auto posX = val["pos_X"];
+			auto posY = val["pos_Y"];
+
+			if (_lvlTimer == posT)
+			{
+				using namespace Objects;
+
+				Block block(posX, posY, window.getSize());
+				std::cout << "[" << key << "] " << val["type"] << std::endl;
+				window.draw(block.getObject());
+			}
+			
 		}
 	}
 }

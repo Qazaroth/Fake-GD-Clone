@@ -4,16 +4,15 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "utils/Output.h"
 #include "utils/Timer.h"
 #include "Level/Level.h"
-
-#define print(x) std::cout << x << std::endl
 
 int main()
 {
 	Level mainLvl("res/data/levels/0.json");
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone", sf::Style::Default);
 	sf::Vector2u windowSize = window.getSize();
 
 	unsigned int windWidth = windowSize.x;
@@ -24,7 +23,7 @@ int main()
 
 	if (!bgTexture.loadFromFile(mainLvl.getLevelBG()))
 	{
-		print("Error occured while loading background file!");
+		Output::error("Error occured while loading background file!");
 		return -1;
 	}
 
@@ -32,9 +31,9 @@ int main()
 	//bg.setOrigin(bgTexture.getSize().x/2, bgTexture.getSize().y/2);
 	//bg.setScale(windWidth / bgTexture.getSize().x, windHeight / bgTexture.getSize().y);
 
-	print(mainLvl.getLevelJSON());
-	print(mainLvl.getLevelPath());
-	print(mainLvl.getAudioPath());
+	std::cout << (mainLvl.getLevelJSON()) << std::endl;
+	Output::log(mainLvl.getLevelPath());
+	Output::log(mainLvl.getAudioPath());
 
 	/*
 	print("WIDTH: " << windWidth << ", HEIGHT: " << windHeight);
@@ -47,7 +46,7 @@ int main()
 
 	if (!plrTexture.loadFromFile("res/img/000.png"))
 	{
-		print("Error occured while loading player texture file!");
+		Output::error("Error occured while loading player texture file!");
 		return -1;
 	}
 
@@ -65,9 +64,6 @@ int main()
 	{
 		sf::Event e;
 
-		print(mainLvl.getLevelTick());
-		
-
 		window.clear(sf::Color::White);
 		window.draw(bg);
 		window.draw(plr);
@@ -83,7 +79,7 @@ int main()
 				break;
 
 			case sf::Event::Resized:
-				print("New WIDTH: " << e.size.width << ", New HEIGHT: " << e.size.height);
+				Output::log("New WIDTH: " + std::to_string(e.size.width) + ", New HEIGHT: " + std::to_string(e.size.height));
 				break;
 
 			case sf::Event::LostFocus:
@@ -99,6 +95,15 @@ int main()
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{
 					// Left click
+					break;
+				}
+			}
+
+			case sf::Event::KeyPressed:
+			{
+				if (e.key.code == sf::Keyboard::Escape)
+				{
+					window.close();
 					break;
 				}
 			}

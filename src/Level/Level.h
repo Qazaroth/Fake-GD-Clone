@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../utils/FileUtils.h"
+#include "../utils/Output.h"
+
+#include "objects/Block.h"
 
 #include <nlohmann/json.hpp>
 #include <SFML/Audio.hpp>
@@ -17,6 +20,7 @@ class Level
 {
 protected:
 	std::string _lvlData = "";
+	nlohmann::json _objsArr = nlohmann::json::array();
 
 	bool _IsInit = false;
 
@@ -38,6 +42,7 @@ public:
 	void update(sf::RenderWindow &window);
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }
+	inline nlohmann::json getObjects() { return _objsArr; }
 
 	inline int getLevelTick() { return _lvlTimer; }
 
