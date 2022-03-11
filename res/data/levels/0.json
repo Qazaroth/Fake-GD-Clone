@@ -1,0 +1,19 @@
+{
+  "name": "0 Test Level",
+  "audio": "res/audio/0.ogg",
+  "bg":  "res/img/bg.png",
+  "objects": [
+    {
+      "type": 1,
+      "pos_T": 566,
+      "pos_X": 1,
+      "pos_Y": 1
+    },
+    {
+      "type": 1,
+      "pos_T": 1800,
+      "pos_X": 1,
+      "pos_Y": 1
+    }
+  ]
+}

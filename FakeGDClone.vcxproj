@@ -143,15 +143,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Level\Level.h" />
+    <ClInclude Include="src\Level\objects\Block.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
     <ClInclude Include="src\utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Level\Level.cpp" />
+    <ClCompile Include="src\Level\objects\Block.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Data\Lvls\0.json" />
+    <None Include="res\data\levels\0.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

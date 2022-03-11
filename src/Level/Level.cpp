@@ -21,6 +21,7 @@ void Level::setup()
 
 	_lvlName = _lvlJson["name"];
 	_audioPath = _lvlJson["audio"];
+	_bgPath = _lvlJson["bg"];
 
 	if (!_bgMusic.openFromFile(_audioPath))
 	{
@@ -43,7 +44,7 @@ Level::Level(std::string levelPath)
 
 Level::~Level() {}
 
-void Level::update()
+void Level::update(sf::RenderWindow &window)
 {
 	if (_IsInit)
 	{

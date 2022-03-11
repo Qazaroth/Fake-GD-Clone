@@ -11,13 +11,26 @@
 
 int main()
 {
-	Level mainLvl("src/Data/Lvls/0.json");
+	Level mainLvl("res/data/levels/0.json");
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
 	sf::Vector2u windowSize = window.getSize();
 
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
+
+	sf::Sprite bg;
+	sf::Texture bgTexture;
+
+	if (!bgTexture.loadFromFile(mainLvl.getLevelBG()))
+	{
+		print("Error occured while loading background file!");
+		return -1;
+	}
+
+	bg.setTexture(bgTexture);
+	//bg.setOrigin(bgTexture.getSize().x/2, bgTexture.getSize().y/2);
+	//bg.setScale(windWidth / bgTexture.getSize().x, windHeight / bgTexture.getSize().y);
 
 	print(mainLvl.getLevelJSON());
 	print(mainLvl.getLevelPath());
@@ -32,19 +45,11 @@ int main()
 
 	sf::Music lvlMusic;
 
-	if (!plrTexture.loadFromFile("res/000.png"))
+	if (!plrTexture.loadFromFile("res/img/000.png"))
 	{
 		print("Error occured while loading player texture file!");
 		return -1;
 	}
-
-	/*
-	if (!lvlMusic.openFromFile("res/audio/0.ogg"))
-	{
-		print("Error occured while loading audio file!");
-		return -1;
-	}
-	*/
 
 	float plrScale = 0.25f;
 	sf::Vector2f plrScaleVec(plrScale, plrScale);
@@ -56,18 +61,17 @@ int main()
 	plr.setScale(plrScaleVec);
 	plr.setPosition(sf::Vector2f(plrTexture.getSize().x, windHeight - plrTexture.getSize().y));
 
-	//lvlMusic.setVolume(50.0f);
-	//lvlMusic.play();
-
 	while (window.isOpen())
 	{
 		sf::Event e;
 
 		print(mainLvl.getLevelTick());
-		mainLvl.update();
+		
 
-		window.clear();
+		window.clear(sf::Color::White);
+		window.draw(bg);
 		window.draw(plr);
+		mainLvl.update(window);
 		window.display();
 
 		while (window.pollEvent(e))
