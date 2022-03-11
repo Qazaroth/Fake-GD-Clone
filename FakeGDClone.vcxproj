@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\entity\Player.h" />
+    <ClInclude Include="src\Graphics\Window.h" />
     <ClInclude Include="src\Level\Level.h" />
     <ClInclude Include="src\Level\objects\Block.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
@@ -149,6 +151,8 @@
     <ClInclude Include="src\utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\entity\Player.cpp" />
+    <ClCompile Include="src\Graphics\Window.cpp" />
     <ClCompile Include="src\Level\Level.cpp" />
     <ClCompile Include="src\Level\objects\Block.cpp" />
     <ClCompile Include="src\main.cpp" />

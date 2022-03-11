@@ -8,8 +8,13 @@
 #include "utils/Timer.h"
 #include "Level/Level.h"
 
+#include "entity/Player.h"
+
 #define defaultHeight 1080
 #define defaultWidth 1920
+
+#define floorHeight 100.0f
+#define floorWidth 2560.0f
 
 int main()
 {
@@ -23,6 +28,12 @@ int main()
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
 
+	sf::RectangleShape floor;
+
+	floor.setSize(sf::Vector2f(floorWidth, floorHeight));
+	floor.setFillColor(sf::Color::Black);
+	floor.setPosition(sf::Vector2f(0.0f, windHeight - (floor.getSize().y)));
+
 	sf::Sprite bg;
 	sf::Texture bgTexture;
 
@@ -33,16 +44,8 @@ int main()
 	}
 
 	bg.setTexture(bgTexture);
-	//bg.setOrigin(bgTexture.getSize().x/2, bgTexture.getSize().y/2);
-	//bg.setScale(windWidth / bgTexture.getSize().x, windHeight / bgTexture.getSize().y);
 
-	std::cout << (mainLvl.getLevelJSON()) << std::endl;
-	Output::log(mainLvl.getLevelPath());
-	Output::log(mainLvl.getAudioPath());
-
-	/*
-	print("WIDTH: " << windWidth << ", HEIGHT: " << windHeight);
-	*/
+	Player player("res/img/000.png", 0.25f);
 
 	sf::Sprite plr;
 	sf::Texture plrTexture;
@@ -65,10 +68,10 @@ int main()
 	plr.setScale(plrScaleVec);
 
 	int plrOffsetX = 5;
-	int plrOffsetY = (windHeight / 4);
+	int plrOffsetY = 39;
 
 	float plrDefaultPosX = plrOffsetX + ((plrTexture.getSize().x * plrScale) / 2);
-	float plrDefaultPosY = windHeight - plrOffsetY - (plrTexture.getSize().y * plrScale);
+	float plrDefaultPosY = (windHeight - floor.getSize().y) - (plrTexture.getSize().y * plrScale) + plrOffsetY;// + windHeight - plrOffsetY - (plrTexture.getSize().y * plrScale);
 
 	sf::Vector2f plrDefaultPos(plrDefaultPosX, plrDefaultPosY);
 
@@ -90,9 +93,9 @@ int main()
 		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
 		//float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y / (10 / plr.getScale().y));
-		float maxY = (defaultHeight - ((30/ defaultHeight) * window.getSize().y)) - ((plrTexture.getSize().y * plr.getScale().y) / 2);
+		float maxY = (defaultHeight - ((30/ defaultHeight) * windHeight)) - ((plrTexture.getSize().y * plr.getScale().y) / 2);
 		//std::cout << maxY << std::endl;
-		float maxX = (defaultWidth - ((30/ defaultWidth) * window.getSize().x)) - ((plrTexture.getSize().x * plr.getScale().x) / 2); //windWidth - (plrTexture.getSize().x * plr.getScale().x);
+		float maxX = (defaultWidth - ((30/ defaultWidth) * windWidth)) - ((plrTexture.getSize().x * plr.getScale().x) / 2); //windWidth - (plrTexture.getSize().x * plr.getScale().x);
 		float minX = (plrTexture.getSize().x * plr.getScale().x) - 30;
 		float minY = (plrTexture.getSize().y * plr.getScale().y) - 30;
 
@@ -127,6 +130,7 @@ int main()
 
 		window.clear(sf::Color::White);
 		window.draw(bg);
+		window.draw(floor);
 		window.draw(plr);
 		mainLvl.update(window);
 		window.display();
@@ -143,21 +147,25 @@ int main()
 			{
 				if (e.size.width < 960)
 				{
+					e.size.width = 960;
 					window.setSize(sf::Vector2u(960, window.getSize().y));
 				}
 
 				if (e.size.height < 540)
 				{
+					e.size.height = 540;
 					window.setSize(sf::Vector2u(window.getSize().x, 540));
 				}
 
 				if (e.size.width > 2560)
 				{
+					e.size.width = 2560;
 					window.setSize(sf::Vector2u(2560, window.getSize().y));
 				}
 
 				if (e.size.height > 1440)
 				{
+					e.size.height = 1440;
 					window.setSize(sf::Vector2u(window.getSize().x, 1440));
 				}
 
