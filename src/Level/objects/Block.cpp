@@ -7,6 +7,9 @@ namespace Objects
 	{
 		_block.setSize(sf::Vector2f(_size, _size));
 		_block.setPosition(_x, _y);
+		_block.setFillColor(sf::Color::Black);
+
+		std::cout << (_block.getPosition().x > _windSize.x - _size) << std::endl;
 
 		if ((_block.getPosition().x > _windSize.x - _size) || (_block.getPosition().x < 0)) 
 		{
@@ -33,5 +36,6 @@ namespace Objects
 		setup();
 	}
 
-	Block::~Block() {}
+	Block::~Block() 
+	{}
 }
