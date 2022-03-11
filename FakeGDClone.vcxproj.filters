@@ -24,4 +24,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Data\Lvls\0.json" />
+  </ItemGroup>
 </Project>

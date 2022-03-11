@@ -1,6 +1,6 @@
 #pragma once
 
-#define WINDOWS_TIMER 0
+#define WINDOWS_TIMER 2
 
 #if WINDOWS_TIMER == 0
 #include <Windows.h>

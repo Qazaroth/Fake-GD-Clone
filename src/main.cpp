@@ -2,26 +2,27 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-
-// 1 to use SF
-// 0 to use utils/Timer
-#define ALTERNATE_FPS 2
+#include <SFML/Audio.hpp>
 
 #include "utils/Timer.h"
 
 #define print(x) std::cout << x << std::endl
 
 float _timer = 0.0f;
+float _updateTimer = 0.0f;
+float updateTick = 1.0f / 60.0f;
+
+unsigned int updates = 0;
 unsigned int frames = 0;
+unsigned int fpsInt = 0;
+unsigned int upsInt = 0;
 
 int main()
 {
 	utils::Timer timer;
-
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Fake GD Clone");
-
-	
 	sf::Vector2u windowSize = window.getSize();
+
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
 
@@ -31,8 +32,11 @@ int main()
 
 	sf::Sprite plr;
 	sf::Texture plrTexture;
+
 	sf::Font font;
 	sf::Text fps;
+
+	sf::Music lvlMusic;
 
 	if (!plrTexture.loadFromFile("res/000.png"))
 	{
@@ -46,6 +50,12 @@ int main()
 		return -1;
 	}
 
+	if (!lvlMusic.openFromFile("res/audio/0.ogg"))
+	{
+		print("Error occured while loading audio file!");
+		return -1;
+	}
+
 	float plrScale = 0.25f;
 	sf::Vector2f plrScaleVec(plrScale, plrScale);
 
@@ -54,16 +64,24 @@ int main()
 	plr.setTexture(plrTexture);
 	plr.setColor(sf::Color::Green);
 	plr.setScale(plrScaleVec);
-	plr.setPosition(sf::Vector2f(plrTexture.getSize().x, window.getSize().y - plrTexture.getSize().y));
+	plr.setPosition(sf::Vector2f(plrTexture.getSize().x, windHeight - plrTexture.getSize().y));
 
 	fps.setFont(font);
 	fps.setCharacterSize(24);
 	fps.setString("0 FPS");
 
+	lvlMusic.setVolume(50.0f);
+	lvlMusic.play();
+
 	while (window.isOpen())
 	{
 		sf::Event e;
+		
 		frames++;
+		window.clear();
+		window.draw(plr);
+		//window.draw(fps);
+		window.display();
 
 		while (window.pollEvent(e))
 		{
@@ -98,31 +116,31 @@ int main()
 			}
 		}
 
-		window.clear(sf::Color::Black);
-		window.draw(plr);
-		window.draw(fps);
-		window.display();
+		/*
+		if (fpsInt >= 120)
+		{
+			fps.setFillColor(sf::Color(255, 215, 0));
+		}
+		else if (fpsInt >= 60 && fpsInt < 120)
+		{
+			fps.setFillColor(sf::Color(0, 255, 0));
+		}
+		else
+		{
+			fps.setFillColor(sf::Color(255, 0, 0));
+		}
 
+		fps.setString(std::to_string(fpsInt) + " FPS");
+		*/
 		if (timer.elapsed() - _timer > 1.0f)
 		{
 			_timer += 1.0f;
-			if (frames < 60)
-			{
-				fps.setFillColor(sf::Color(255, 0, 0));
-			}
-			else if (frames >= 60 && frames < 120)
-			{
-				fps.setFillColor(sf::Color(0, 255, 0));
-			}
-			else
-			{
-				fps.setFillColor(sf::Color(255, 215, 0));
-			}
-
-			fps.setString(std::to_string(frames) + " FPS");
-			//print(frames << " FPS");
-			timer.reset();
+			fpsInt = frames;
+			upsInt = updates;
 			frames = 0;
+			updates = 0;
+			print(fpsInt << " FPS");
+			timer.reset();
 		}
 	}
 

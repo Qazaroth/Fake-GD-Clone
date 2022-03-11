@@ -1,0 +1,12 @@
+{
+  "name": "0 Test Level",
+  "audio": "res/audio/0.ogg",
+  "objects": [
+    {
+      "type": 1,
+      "pos_T": 0,
+      "pos_X": 1,
+      "pos_Y":  1
+    }
+  ]
+}
