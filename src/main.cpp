@@ -8,11 +8,16 @@
 #include "utils/Timer.h"
 #include "Level/Level.h"
 
+#define defaultHeight 1080
+#define defaultWidth 1920
+
 int main()
 {
+	bool isPaused = false;
+
 	Level mainLvl("res/data/levels/0.json");
 
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Fake GD Clone", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone", sf::Style::Default);
 	sf::Vector2u windowSize = window.getSize();
 
 	unsigned int windWidth = windowSize.x;
@@ -82,13 +87,20 @@ int main()
 		sf::Event e;
 
 		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
-		float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y) - 30;
-		float maxX = windWidth - (plrTexture.getSize().x * plr.getScale().x);
+		//float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y / (10 / plr.getScale().y));
+		float maxY = (defaultHeight - ((30/ defaultHeight) * window.getSize().y)) - ((plrTexture.getSize().y * plr.getScale().y) / 2);
+		//std::cout << maxY << std::endl;
+		float maxX = (defaultWidth - ((30/ defaultWidth) * window.getSize().x)) - ((plrTexture.getSize().x * plr.getScale().x) / 2); //windWidth - (plrTexture.getSize().x * plr.getScale().x);
 		float minX = (plrTexture.getSize().x * plr.getScale().x) - 30;
 		float minY = (plrTexture.getSize().y * plr.getScale().y) - 30;
 
-		plr.move(velocity);
+		if (!isPaused)
+		{
+			plr.move(velocity);
+		}
+		
 
 		if (plr.getPosition().y < minY)
 		{
@@ -101,11 +113,16 @@ int main()
 
 		if (plr.getPosition().x < minX)
 		{
-			velocity.x = 5.0f;
+			velocity.x = 5.0f;//(5.0f/defaultWidth) * windWidth;
 		}
 		else if (plr.getPosition().x > maxX)
 		{
-			velocity.x = -5.0f;
+			velocity.x = -5.0f;//((5.0f / defaultWidth) * windWidth);
+		}
+
+		if (plr.getPosition().y < plrDefaultPosY)
+		{
+			plr.move(0.0f, 1.25f);
 		}
 
 		window.clear(sf::Color::White);
@@ -123,14 +140,38 @@ int main()
 				break;
 
 			case sf::Event::Resized:
+			{
+				if (e.size.width < 960)
+				{
+					window.setSize(sf::Vector2u(960, window.getSize().y));
+				}
+
+				if (e.size.height < 540)
+				{
+					window.setSize(sf::Vector2u(window.getSize().x, 540));
+				}
+
+				if (e.size.width > 2560)
+				{
+					window.setSize(sf::Vector2u(2560, window.getSize().y));
+				}
+
+				if (e.size.height > 1440)
+				{
+					window.setSize(sf::Vector2u(window.getSize().x, 1440));
+				}
+
 				Output::log("New WIDTH: " + std::to_string(e.size.width) + ", New HEIGHT: " + std::to_string(e.size.height));
 				break;
+			}
 
 			case sf::Event::LostFocus:
+				isPaused = true;
 				// Pause game
 				break;
 
 			case sf::Event::GainedFocus:
+				isPaused = false;
 				// Resume game
 				break;
 
