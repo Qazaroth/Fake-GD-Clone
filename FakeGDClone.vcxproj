@@ -142,9 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Level\Level.h" />
+    <ClInclude Include="src\utils\FileUtils.h" />
     <ClInclude Include="src\utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Level\Level.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
