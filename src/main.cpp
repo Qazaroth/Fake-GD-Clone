@@ -13,6 +13,8 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
+#define jumpForce -50.0f
+
 #define floorHeight 100.0f
 #define floorWidth 2560.0f
 
@@ -45,8 +47,9 @@ int main()
 
 	bg.setTexture(bgTexture);
 
-	Player player("res/img/000.png", 0.25f);
+	Player plr("res/img/000.png", 0.25f, window);
 
+	/*
 	sf::Sprite plr;
 	sf::Texture plrTexture;
 
@@ -76,62 +79,29 @@ int main()
 	sf::Vector2f plrDefaultPos(plrDefaultPosX, plrDefaultPosY);
 
 	plr.setPosition(plrDefaultPos);
-
-	sf::Vector2f velocity(5.0f, 0.0f);
+	*/
 
 	while (window.isOpen())
 	{
+		sf::Event e;
+
 		windowSize = window.getSize();
 
 		windWidth = windowSize.x;
 		windHeight = windowSize.y;
 
-		sf::Vector2i m = sf::Mouse::getPosition(window);
-		sf::Event e;
+		//sf::Vector2i m = sf::Mouse::getPosition(window);
 
 		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
 		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
-		//float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y / (10 / plr.getScale().y));
-		float maxY = (defaultHeight - ((30/ defaultHeight) * windHeight)) - ((plrTexture.getSize().y * plr.getScale().y) / 2);
-		//std::cout << maxY << std::endl;
-		float maxX = (defaultWidth - ((30/ defaultWidth) * windWidth)) - ((plrTexture.getSize().x * plr.getScale().x) / 2); //windWidth - (plrTexture.getSize().x * plr.getScale().x);
-		float minX = (plrTexture.getSize().x * plr.getScale().x) - 30;
-		float minY = (plrTexture.getSize().y * plr.getScale().y) - 30;
-
-		if (!isPaused)
-		{
-			plr.move(velocity);
-		}
-		
-
-		if (plr.getPosition().y < minY)
-		{
-			plr.setPosition(plr.getPosition().x, minY);
-		}
-		else if (plr.getPosition().y > maxY)
-		{
-			plr.setPosition(plr.getPosition().x, maxY);
-		}
-
-		if (plr.getPosition().x < minX)
-		{
-			velocity.x = 5.0f;//(5.0f/defaultWidth) * windWidth;
-		}
-		else if (plr.getPosition().x > maxX)
-		{
-			velocity.x = -5.0f;//((5.0f / defaultWidth) * windWidth);
-		}
-
-		if (plr.getPosition().y < plrDefaultPosY)
-		{
-			plr.move(0.0f, 1.25f);
-		}
-
 		window.clear(sf::Color::White);
 		window.draw(bg);
 		window.draw(floor);
-		window.draw(plr);
+
+		plr.update(window, isPaused);
+		//window.draw(plr.getPlayer());
+
 		mainLvl.update(window);
 		window.display();
 
@@ -187,13 +157,8 @@ int main()
 			{
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{
-					plr.move(sf::Vector2f(0.0f, -50.0f));
-					// Left click
+					plr.jump();
 					break;
-				}
-				else if (e.mouseButton.button == sf::Mouse::Right)
-				{
-					plr.move(sf::Vector2f(0.0f, 50.0f));
 				}
 			}
 
@@ -202,6 +167,11 @@ int main()
 				if (e.key.code == sf::Keyboard::Escape)
 				{
 					window.close();
+					break;
+				}
+				else if (e.key.code == sf::Keyboard::Space)
+				{
+					plr.jump();
 					break;
 				}
 			}

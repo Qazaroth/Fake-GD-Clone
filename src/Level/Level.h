@@ -34,6 +34,8 @@ private:
 	nlohmann::json _lvlJson;
 	sf::Music _bgMusic;
 
+	sf::RectangleShape _floor;
+
 	void setup();
 public:
 	Level(std::string levelPath);
@@ -45,6 +47,8 @@ public:
 	inline nlohmann::json getObjects() { return _objsArr; }
 
 	inline int getLevelTick() { return _lvlTimer; }
+
+	inline sf::RectangleShape getFloor() { return _floor; }
 
 	inline std::string getLevelName() { return _lvlName; }
 	inline std::string getLevelBG() { return _bgPath; }

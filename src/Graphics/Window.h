@@ -5,9 +5,6 @@
 
 namespace Graphics
 {
-#define defaultHeight 1080
-#define defaultWidth 1920
-
 	class Window
 	{
 	private:

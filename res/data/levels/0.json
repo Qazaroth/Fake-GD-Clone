@@ -6,14 +6,12 @@
     {
       "type": 1,
       "pos_T": 566,
-      "pos_X": 1,
-      "pos_Y": 1
+      "pos_Y": 160
     },
     {
       "type": 1,
       "pos_T": 1800,
-      "pos_X": 1,
-      "pos_Y": 1
+      "pos_Y": 80
     }
   ]
 }
