@@ -18,13 +18,15 @@
 #define floorHeight 100.0f
 #define floorWidth 2560.0f
 
+std::string VERSION = "1.0 Beta";
+
 int main()
 {
 	using namespace utils;
 
 	bool isPaused = false;
 
-	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
 	//window.setFramerateLimit(60);
 
 	sf::Vector2u windowSize = window.getSize();
