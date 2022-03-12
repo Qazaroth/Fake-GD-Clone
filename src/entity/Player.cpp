@@ -58,7 +58,7 @@ Player::Player(std::string texturePath, sf::Vector2f scale, sf::RenderWindow &wi
 
 Player::~Player() {}
 
-void Player::update(sf::RenderWindow &window, bool isPaused)
+void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 {
 	Configs config;
 
@@ -101,6 +101,12 @@ void Player::update(sf::RenderWindow &window, bool isPaused)
 	if (_plr.getPosition().y < _plrDefaultPosY)
 	{
 		_plr.move(0.0f, 1.25f);
+		_plr.rotate((8.4375f / 60.0f) * frames);
+	}
+
+	if (_plr.getPosition().y == _plrDefaultPosY)
+	{
+		_plr.setRotation(0.0f);
 	}
 
 	if (_plr.getPosition().y > _plrDefaultPosY)

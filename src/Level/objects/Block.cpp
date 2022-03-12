@@ -5,8 +5,6 @@ namespace Objects
 	// Private
 	void Block::setup()
 	{
-		sf::RectangleShape r(sf::Vector2f(_size, _size));
-		_block = r;
 		_block.setSize(sf::Vector2f(_size, _size));
 		_block.setPosition(_x, _y);
 		_block.setFillColor(sf::Color::Black);

@@ -3,6 +3,7 @@
 //Private
 void Level::setup()
 {
+	Configs config;
 	_IsInit = false;
 	if (_levelPath == "")
 	{
@@ -30,53 +31,96 @@ void Level::setup()
 		return;
 	}
 
+	if (!_bgTexture.loadFromFile(_bgPath))
+	{
+		Output::error("Error occured while loading background file!");
+		return;
+	}
+
+	_background.setTexture(_bgTexture);
+
 	_bgMusic.setVolume(37.5f);
+
+	_floor.setSize(config.getFloorSize());
+	_floor.setFillColor(sf::Color::Black);
+	_floor.setPosition(sf::Vector2f(0.0f, _windowSize.y - (_floor.getSize().y)));
+
+	for (auto i : _objsArr.items())
+	{
+		auto key = i.key();
+		auto val = i.value();
+
+		int type = val["type"];
+		int posT = val["pos_T"];
+		int posY = val["pos_Y"];
+
+		std::list<int> values;
+
+		values.push_back(type);
+		values.push_back(posT);
+		values.push_back(posY);
+
+		_objects.insert(std::pair<int, std::list<int>>(posT, values));
+
+		Objects::Block block(_windowSize.x - 100, posY, _windowSize);
+		//std::cout << "[" << key << "] " << val << std::endl;
+	}
 
 	Output::log("Succesfully loaded level!");
 	_IsInit = true;
 }
+
+int Level::getDataOfObject(std::list<int> values, int index)
+{
+	using namespace std;
+
+	auto i = values.begin();
+
+	advance(i, index);
+
+	return *i;
+}
 //Public
-Level::Level(std::string levelPath)
+Level::Level(std::string levelPath, sf::Vector2u windowSize)
 {
 	_levelPath = levelPath;
+	_windowSize = windowSize;
 
 	setup();
 }
 
 Level::~Level() {}
 
-void Level::update(sf::RenderWindow &window)
+void Level::update(sf::RenderWindow &window, bool isPaused)
 {
 	if (_IsInit)
 	{
-		if (_bgMusic.getStatus() == sf::SoundSource::Playing)
-		{
-			_lvlTimer += 1;
-		}
-		else
-		{
-			//_bgMusic.play();
-		}
+		window.draw(_background);
 
-		for (auto i : _objsArr.items())
+		if (!isPaused)
 		{
-			auto key = i.key();
-			auto val = i.value();
-
-			auto type = val["type"];
-			auto posT = val["pos_T"];
-			auto posX = val["pos_X"];
-			auto posY = val["pos_Y"];
-
-			if (_lvlTimer == posT)
+			_lvlTimer++;
+			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
 			{
-				using namespace Objects;
-
-				Block block(posX, posY, window.getSize());
-				std::cout << "[" << key << "] " << val["type"] << std::endl;
-				window.draw(block.getObject());
+				_lvlTimer++;
 			}
-			
+			else
+			{
+				//_bgMusic.play();
+			}
+
+			if (_objects.count(_lvlTimer))
+			{
+				auto obj = _objects.find(_lvlTimer);
+
+				int type = getDataOfObject(obj->second, 0);
+				int posT = getDataOfObject(obj->second, 1);
+				int posY = getDataOfObject(obj->second, 2);
+
+				std::cout << type << " | " << posT << ", " << posY << std::endl;
+			}
 		}
+
+		window.draw(_floor);
 	}
 }

@@ -34,7 +34,7 @@ public:
 	Player(std::string texturePath, sf::Vector2f scale, sf::RenderWindow &window);
 	~Player();
 
-	void update(sf::RenderWindow &window, bool isPaused = false);
+	void update(sf::RenderWindow &window, int frames, bool isPaused = false);
 	void jump();
 
 	void setJumpForce(float jumpForce) { _jumpForce = jumpForce; }

@@ -3,6 +3,8 @@
 #include "../utils/FileUtils.h"
 #include "../utils/Output.h"
 
+#include "../configs.h"
+
 #include "objects/Block.h"
 
 #include <nlohmann/json.hpp>
@@ -10,6 +12,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+#include <map>
+#include <iterator>
 
 enum class ObjectType
 {
@@ -21,6 +25,9 @@ class Level
 protected:
 	std::string _lvlData = "";
 	nlohmann::json _objsArr = nlohmann::json::array();
+
+	sf::Vector2u _windowSize;
+	std::map<int, std::list<int>> _objects;
 
 	bool _IsInit = false;
 
@@ -35,13 +42,17 @@ private:
 	sf::Music _bgMusic;
 
 	sf::RectangleShape _floor;
+	sf::Sprite _background;
+	sf::Texture _bgTexture;
 
 	void setup();
+
+	int getDataOfObject(std::list<int> values, int index);
 public:
-	Level(std::string levelPath);
+	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
-	void update(sf::RenderWindow &window);
+	void update(sf::RenderWindow &window, bool isPaused = false);
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }
 	inline nlohmann::json getObjects() { return _objsArr; }

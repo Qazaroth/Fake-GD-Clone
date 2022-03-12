@@ -20,67 +20,38 @@
 
 int main()
 {
+	using namespace utils;
+
 	bool isPaused = false;
 
-	Level mainLvl("res/data/levels/0.json");
-
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone", sf::Style::Default);
+	//window.setFramerateLimit(60);
+
 	sf::Vector2u windowSize = window.getSize();
+
+	Level mainLvl("res/data/levels/0.json", windowSize);
 
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
 
-	sf::RectangleShape floor;
-
-	floor.setSize(sf::Vector2f(floorWidth, floorHeight));
-	floor.setFillColor(sf::Color::Black);
-	floor.setPosition(sf::Vector2f(0.0f, windHeight - (floor.getSize().y)));
-
-	sf::Sprite bg;
-	sf::Texture bgTexture;
-
-	if (!bgTexture.loadFromFile(mainLvl.getLevelBG()))
-	{
-		Output::error("Error occured while loading background file!");
-		return -1;
-	}
-
-	bg.setTexture(bgTexture);
-
 	Player plr("res/img/000.png", 0.25f, window);
 
-	/*
-	sf::Sprite plr;
-	sf::Texture plrTexture;
+	sf::Font fpsFont;
+	sf::Text fpsTxt;
 
-	sf::Music lvlMusic;
-
-	if (!plrTexture.loadFromFile("res/img/000.png"))
+	if (!fpsFont.loadFromFile("res/fonts/arial.ttf"))
 	{
-		Output::error("Error occured while loading player texture file!");
+		std::cout << "[ERROR] Error occured while loading font file!" << std::endl;
 		return -1;
 	}
 
-	float plrScale = 0.25f;
-	sf::Vector2f plrScaleVec(plrScale, plrScale);
+	fpsTxt.setFont(fpsFont);
+	fpsTxt.setCharacterSize(24);
+	fpsTxt.setString("0 FPS");
 
-	plr.setOrigin(plrTexture.getSize().x / 2, plrTexture.getSize().y / 2);
-
-	plr.setTexture(plrTexture);
-	plr.setColor(sf::Color::Green);
-	plr.setScale(plrScaleVec);
-
-	int plrOffsetX = 5;
-	int plrOffsetY = 39;
-
-	float plrDefaultPosX = plrOffsetX + ((plrTexture.getSize().x * plrScale) / 2);
-	float plrDefaultPosY = (windHeight - floor.getSize().y) - (plrTexture.getSize().y * plrScale) + plrOffsetY;// + windHeight - plrOffsetY - (plrTexture.getSize().y * plrScale);
-
-	sf::Vector2f plrDefaultPos(plrDefaultPosX, plrDefaultPosY);
-
-	plr.setPosition(plrDefaultPos);
-	*/
-
+	Timer time;
+	float timer = 0;
+	unsigned int frames = 0;
 	while (window.isOpen())
 	{
 		sf::Event e;
@@ -96,14 +67,32 @@ int main()
 		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
 		window.clear(sf::Color::White);
-		window.draw(bg);
-		window.draw(floor);
-
-		plr.update(window, isPaused);
-		//window.draw(plr.getPlayer());
-
-		mainLvl.update(window);
+		mainLvl.update(window, isPaused);
+		window.draw(fpsTxt);
+		plr.update(window, frames, isPaused);
 		window.display();
+		frames++;
+
+		if (time.elapsed() - timer > 1.0f)
+		{
+			timer += 1.0f;
+			if (frames < 60)
+			{
+				fpsTxt.setFillColor(sf::Color(255, 0, 0));
+			}
+			else if (frames >= 60 && frames < 120)
+			{
+				fpsTxt.setFillColor(sf::Color(0, 255, 0));
+			}
+			else
+			{
+				fpsTxt.setFillColor(sf::Color(255, 215, 0));
+			}
+
+			fpsTxt.setString(std::to_string(frames) + " FPS");
+			//printf("%d FPS\n", frames);
+			frames = 0;
+		}
 
 		while (window.pollEvent(e))
 		{
@@ -145,12 +134,10 @@ int main()
 
 			case sf::Event::LostFocus:
 				isPaused = true;
-				// Pause game
 				break;
 
 			case sf::Event::GainedFocus:
 				isPaused = false;
-				// Resume game
 				break;
 
 			case sf::Event::MouseButtonPressed:
