@@ -28,6 +28,7 @@ protected:
 
 	sf::Vector2u _windowSize;
 	std::map<int, std::list<int>> _objects;
+	std::list<Objects::Block> _renderBlocks;
 
 	bool _IsInit = false;
 

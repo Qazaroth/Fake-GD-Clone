@@ -62,7 +62,6 @@ void Level::setup()
 
 		_objects.insert(std::pair<int, std::list<int>>(posT, values));
 
-		Objects::Block block(_windowSize.x - 100, posY, _windowSize);
 		//std::cout << "[" << key << "] " << val << std::endl;
 	}
 
@@ -97,6 +96,8 @@ void Level::update(sf::RenderWindow &window, bool isPaused)
 	{
 		window.draw(_background);
 
+		_windowSize = window.getSize();
+
 		if (!isPaused)
 		{
 			_lvlTimer++;
@@ -109,6 +110,18 @@ void Level::update(sf::RenderWindow &window, bool isPaused)
 				//_bgMusic.play();
 			}
 
+			if (_renderBlocks.size() > 0)
+			{
+				for (int i = 0; i < _renderBlocks.size(); i++)
+				{
+					std::list<Objects::Block>::iterator e = _renderBlocks.begin();
+					std::advance(e, i);
+
+					window.draw((*e).getObject());
+				}
+			}
+			
+
 			if (_objects.count(_lvlTimer))
 			{
 				auto obj = _objects.find(_lvlTimer);
@@ -117,7 +130,14 @@ void Level::update(sf::RenderWindow &window, bool isPaused)
 				int posT = getDataOfObject(obj->second, 1);
 				int posY = getDataOfObject(obj->second, 2);
 
-				std::cout << type << " | " << posT << ", " << posY << std::endl;
+				if (type == 1)
+				{
+					Objects::Block block(_windowSize.x - 100, posY, _windowSize);
+					_renderBlocks.push_back(block);
+					window.draw(block.getObject());
+				}
+				
+				//std::cout << type << " | " << posT << ", " << posY << std::endl;
 			}
 		}
 

@@ -73,8 +73,8 @@ int main()
 		window.draw(fpsTxt);
 		plr.update(window, frames, isPaused);
 		window.display();
-		frames++;
 
+		frames++;
 		if (time.elapsed() - timer > 1.0f)
 		{
 			timer += 1.0f;

@@ -6,7 +6,7 @@
 
 namespace Objects
 {
-	class Block : public sf::Drawable
+	class Block
 	{
 	private:
 		float _x, _y;
@@ -16,10 +16,6 @@ namespace Objects
 		sf::Vector2u _windSize;
 
 		void setup();
-		virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
-		{
-			target.draw(_block, states);
-		}
 	public:
 		Block(float x, float y, sf::Vector2u windowSize);
 		~Block();
