@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="src\configs.h" />
     <ClInclude Include="src\entity\Player.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Graphics\Window.h" />
     <ClInclude Include="src\Level\Level.h" />
     <ClInclude Include="src\Level\objects\Block.h" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="src\configs.cpp" />
     <ClCompile Include="src\entity\Player.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics\Window.cpp" />
     <ClCompile Include="src\Level\Level.cpp" />
     <ClCompile Include="src\Level\objects\Block.cpp" />

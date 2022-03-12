@@ -4,6 +4,7 @@
 #include "../utils/Output.h"
 
 #include "../configs.h"
+#include "../Game.h"
 
 #include "objects/Block.h"
 #include "../entity/Player.h"
@@ -54,7 +55,7 @@ public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
-	void update(sf::RenderWindow &window, Player &plr, bool isPaused = false);
+	void update(sf::RenderWindow &window, Player &plr, Game &game);
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }
 	inline nlohmann::json getObjects() { return _objsArr; }

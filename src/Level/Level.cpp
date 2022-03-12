@@ -90,15 +90,16 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
-void Level::update(sf::RenderWindow &window, Player &plr, bool isPaused)
+void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 {
+	sf::FloatRect plrGlobalBounds = plr.getPlayer().getGlobalBounds();
 	if (_IsInit)
 	{
 		window.draw(_background);
 
 		_windowSize = window.getSize();
 
-		if (!isPaused)
+		if (!game.isPaused())
 		{
 			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
 			{
@@ -131,23 +132,20 @@ void Level::update(sf::RenderWindow &window, Player &plr, bool isPaused)
 						Objects::Block b = (*e);
 						sf::Vector2f newPos(-b.getSize(), 0.0f);
 
+						sf::FloatRect blockGlobalBounds = b.getObject().getGlobalBounds();
+
 						//b.move(newPos);
-						std::cout << plr.collideWith(b) << std::endl;
 						window.draw(b.getObject());
+						if (plr.collideWith(b)) game.setEnded(true);
 					}
 				}
 			}
-			else
-			{
-				_bgMusic.play();
-			}
+			else _bgMusic.play();
 		}
 		else
 		{
-			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
-			{
+			if (_bgMusic.getStatus() == sf::SoundSource::Playing) 
 				_bgMusic.pause();
-			}
 		}
 
 		window.draw(_floor);

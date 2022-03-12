@@ -39,7 +39,7 @@ public:
 	void update(sf::RenderWindow &window, int frames, bool isPaused = false);
 	void jump();
 
-	bool collideWith(Objects::Block block);
+	bool collideWith(Objects::Block &block);
 
 	void setJumpForce(float jumpForce) { _jumpForce = jumpForce; }
 	void setWindowWidth(float windowWidth) { _windowWidth = windowWidth; }

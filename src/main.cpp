@@ -8,6 +8,8 @@
 #include "utils/Timer.h"
 #include "Level/Level.h"
 
+#include "Game.h"
+
 #include "entity/Player.h"
 
 #define defaultHeight 1080
@@ -24,7 +26,7 @@ int main()
 {
 	using namespace utils;
 
-	bool isPaused = false;
+	Game game;
 
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
 	//window.setFramerateLimit(60);
@@ -56,10 +58,11 @@ int main()
 	unsigned int frames = 0;
 	while (window.isOpen())
 	{
+		if (game.isEnded()) return -1;
+
 		sf::Event e;
 
 		windowSize = window.getSize();
-
 		windWidth = windowSize.x;
 		windHeight = windowSize.y;
 
@@ -69,9 +72,9 @@ int main()
 		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
 		window.clear(sf::Color::White);
-		mainLvl.update(window, plr, isPaused);
+		mainLvl.update(window, plr, game);
 		window.draw(fpsTxt);
-		plr.update(window, frames, isPaused);
+		plr.update(window, frames, game.isPaused());
 		window.display();
 
 		frames++;
@@ -135,11 +138,11 @@ int main()
 			}
 
 			case sf::Event::LostFocus:
-				isPaused = true;
+				game.setPause(true);
 				break;
 
 			case sf::Event::GainedFocus:
-				isPaused = false;
+				game.setPause(false);
 				break;
 
 			case sf::Event::MouseButtonPressed:

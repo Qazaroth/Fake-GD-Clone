@@ -122,22 +122,10 @@ void Player::jump()
 	_plr.move(sf::Vector2f(0.0f, _jumpForce));
 }
 
-bool Player::collideWith(Objects::Block block)
+bool Player::collideWith(Objects::Block &block)
 {
-	float blockSize = block.getSize();
-	sf::Vector2f blockPosition = block.getPosition();
+	sf::FloatRect plrGlobalBounds = _plr.getGlobalBounds();
+	sf::FloatRect blockGlobalBounds = block.getObject().getGlobalBounds();
 
-	sf::Vector2f blockLeftFace(block.getSize() / 2, block.getSize());
-	sf::Vector2f blockBottomFace(block.getObject().getOrigin().x + blockSize, block.getSize());
-
-	return _plr.getGlobalBounds().intersects(block.getObject().getGlobalBounds());
-	/*
-	if (_plr.getPosition().x >= blockLeftFace.x)
-		return true;
-
-	if (_plr.getPosition().y >= blockBottomFace.y)
-		return true;
-	*/
-
-	//return false;
+	return plrGlobalBounds.intersects(blockGlobalBounds);
 }
