@@ -39,7 +39,7 @@ void Level::setup()
 
 	_background.setTexture(_bgTexture);
 
-	_bgMusic.setVolume(37.5f);
+	_bgMusic.setVolume(18.75f);//37.5f);
 
 	_floor.setSize(config.getFloorSize());
 	_floor.setFillColor(sf::Color::Black);
@@ -90,7 +90,7 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
-void Level::update(sf::RenderWindow &window, bool isPaused)
+void Level::update(sf::RenderWindow &window, Player &plr, bool isPaused)
 {
 	if (_IsInit)
 	{
@@ -100,44 +100,53 @@ void Level::update(sf::RenderWindow &window, bool isPaused)
 
 		if (!isPaused)
 		{
-			_lvlTimer++;
 			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
 			{
 				_lvlTimer++;
+
+				if (_objects.count(_lvlTimer))
+				{
+					auto obj = _objects.find(_lvlTimer);
+
+					int type = getDataOfObject(obj->second, 0);
+					int posT = getDataOfObject(obj->second, 1);
+					int posY = getDataOfObject(obj->second, 2);
+
+					if (type == 1)
+					{
+						Objects::Block block(_windowSize.x - 100, posY, _windowSize);
+						_renderBlocks.push_back(block);
+						window.draw(block.getObject());
+					}
+					_objects.erase(obj);
+				}
+
+				if (_renderBlocks.size() > 0)
+				{
+					for (int i = 0; i < _renderBlocks.size(); i++)
+					{
+						std::list<Objects::Block>::iterator e = _renderBlocks.begin();
+						std::advance(e, i);
+
+						Objects::Block b = (*e);
+						sf::Vector2f newPos(-b.getSize(), 0.0f);
+
+						//b.move(newPos);
+						std::cout << plr.collideWith(b) << std::endl;
+						window.draw(b.getObject());
+					}
+				}
 			}
 			else
 			{
-				//_bgMusic.play();
+				_bgMusic.play();
 			}
-
-			if (_renderBlocks.size() > 0)
+		}
+		else
+		{
+			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
 			{
-				for (int i = 0; i < _renderBlocks.size(); i++)
-				{
-					std::list<Objects::Block>::iterator e = _renderBlocks.begin();
-					std::advance(e, i);
-
-					window.draw((*e).getObject());
-				}
-			}
-			
-
-			if (_objects.count(_lvlTimer))
-			{
-				auto obj = _objects.find(_lvlTimer);
-
-				int type = getDataOfObject(obj->second, 0);
-				int posT = getDataOfObject(obj->second, 1);
-				int posY = getDataOfObject(obj->second, 2);
-
-				if (type == 1)
-				{
-					Objects::Block block(_windowSize.x - 100, posY, _windowSize);
-					_renderBlocks.push_back(block);
-					window.draw(block.getObject());
-				}
-				
-				//std::cout << type << " | " << posT << ", " << posY << std::endl;
+				_bgMusic.pause();
 			}
 		}
 

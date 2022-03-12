@@ -69,7 +69,7 @@ int main()
 		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
 
 		window.clear(sf::Color::White);
-		mainLvl.update(window, isPaused);
+		mainLvl.update(window, plr, isPaused);
 		window.draw(fpsTxt);
 		plr.update(window, frames, isPaused);
 		window.display();

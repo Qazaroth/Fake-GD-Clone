@@ -6,6 +6,7 @@
 #include "../configs.h"
 
 #include "objects/Block.h"
+#include "../entity/Player.h"
 
 #include <nlohmann/json.hpp>
 #include <SFML/Audio.hpp>
@@ -53,7 +54,7 @@ public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
-	void update(sf::RenderWindow &window, bool isPaused = false);
+	void update(sf::RenderWindow &window, Player &plr, bool isPaused = false);
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }
 	inline nlohmann::json getObjects() { return _objsArr; }

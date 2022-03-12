@@ -98,7 +98,7 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 		_velocity.x = -_testVeloX;//((5.0f / defaultWidth) * windWidth);
 	}
 
-	if (_plr.getPosition().y < _plrDefaultPosY)
+	if (_plr.getPosition().y < _plrDefaultPosY && !isPaused)
 	{
 		_plr.move(0.0f, 1.25f);
 		_plr.rotate((8.4375f / 60.0f) * frames);
@@ -120,4 +120,24 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 void Player::jump()
 {
 	_plr.move(sf::Vector2f(0.0f, _jumpForce));
+}
+
+bool Player::collideWith(Objects::Block block)
+{
+	float blockSize = block.getSize();
+	sf::Vector2f blockPosition = block.getPosition();
+
+	sf::Vector2f blockLeftFace(block.getSize() / 2, block.getSize());
+	sf::Vector2f blockBottomFace(block.getObject().getOrigin().x + blockSize, block.getSize());
+
+	return _plr.getGlobalBounds().intersects(block.getObject().getGlobalBounds());
+	/*
+	if (_plr.getPosition().x >= blockLeftFace.x)
+		return true;
+
+	if (_plr.getPosition().y >= blockBottomFace.y)
+		return true;
+	*/
+
+	//return false;
 }

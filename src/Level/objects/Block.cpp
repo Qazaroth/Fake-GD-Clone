@@ -40,4 +40,12 @@ namespace Objects
 
 	Block::~Block() 
 	{}
+
+	void Block::move(sf::Vector2f velocity)
+	{
+		_x = velocity.x;
+		_y = velocity.y;
+
+		_block.move(velocity);
+	}
 }

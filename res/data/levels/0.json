@@ -1,6 +1,6 @@
 {
   "name": "0 Test Level",
-  "audio": "res/audio/0.ogg",
+  "audio": "res/audio/1.ogg",
   "bg":  "res/img/bg.png",
   "objects": [
     {
