@@ -20,7 +20,7 @@
 #define floorHeight 100.0f
 #define floorWidth 2560.0f
 
-std::string VERSION = "1.0 Beta";
+std::string VERSION = "1.2.0-Beta";
 
 int main()
 {
