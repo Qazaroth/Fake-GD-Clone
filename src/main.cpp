@@ -23,11 +23,45 @@
 
 std::string VERSION = "1.3.0-Beta";
 
+bool isBtnPressed(sf::Sprite btn, sf::Vector2i mousePosition)
+{
+	sf::FloatRect btnGlobalBounds = btn.getGlobalBounds();
+
+	int mouseX = mousePosition.x;
+	int mouseY = mousePosition.y;
+
+	float left = btnGlobalBounds.left;
+	float top = btnGlobalBounds.top;
+	float right = left + btnGlobalBounds.width;
+	float bottom = top + btnGlobalBounds.height;
+
+	if (left <= mouseX && mouseX <= right)
+	{
+		if (top <= mouseY && mouseY <= bottom)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int main()
 {
 	using namespace utils;
 
 	Configs config;
+
+	sf::Music _mmBGMusic;
+
+	if (!_mmBGMusic.openFromFile("res/audio/-1.ogg"))
+	{
+		Output::error("An error occured while loading audio file!");
+		return -1;
+	}
+
+	_mmBGMusic.setLoop(true);
+	_mmBGMusic.setVolume(18.75f);
 	
 	sf::Sprite _mmBG;
 	sf::Texture _mmBGTexture;
@@ -61,10 +95,11 @@ int main()
 	_mmBG.setTextureRect(sf::IntRect(_mmBGTexture.getSize().x-2044, 0, 2043, 2043));
 
 	titleBtn.setTexture(titleTexture);
+	titleBtn.setScale(sf::Vector2f(1.125f, 1.125f));
 	titleBtn.setOrigin((titleTexture.getSize().x / 2), (titleTexture.getSize().y / 2));
 
 	playBtn.setTexture(playTexture);
-	playBtn.setScale(sf::Vector2f(0.75f, 0.75f));
+	playBtn.setScale(sf::Vector2f(1.125f, 1.125f));
 	playBtn.setOrigin((playTexture.getSize().x / 2), (playTexture.getSize().y / 2));
 	//_mmBG.setOrigin((_mmBGTexture.getSize().x / 2), (_mmBGTexture.getSize().y / 2));
 
@@ -80,7 +115,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
 	window.setFramerateLimit(config.getFPSCap());
 
-	titleBtn.setPosition(window.getSize().x / 2, titleBtn.getPosition().y + 225);
+	titleBtn.setPosition((window.getSize().x / 2) - 10, titleBtn.getPosition().y + 150);
 	playBtn.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 	//_mmBG.setScale(sf::Vector2f(window.getSize().x / _mmBGTexture.getSize().x, window.getSize().y / _mmBGTexture.getSize().y));
 	
@@ -93,6 +128,11 @@ int main()
 	unsigned int frames = 0;
 	while (window.isOpen())
 	{
+		if (_mmBGMusic.getStatus() != sf::SoundSource::Playing)
+		{
+			_mmBGMusic.play();
+		}
+
 		sf::Event e;
 
 		window.clear(sf::Color::White);
@@ -174,7 +214,8 @@ int main()
 				{
 					sf::Vector2i m = sf::Mouse::getPosition(window);
 
-					std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+					std::cout << isBtnPressed(playBtn, m) << std::endl;
+					//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
 					break;
 				}
 			}
