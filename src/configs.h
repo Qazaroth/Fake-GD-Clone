@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <SFML/Graphics.hpp>
 
 class Configs
@@ -13,10 +14,14 @@ private:
 
 	unsigned int _fpsCap = 60;
 
+	std::string _menuBGMusic = "res/audio/menu.ogg";
+
 	sf::Vector2f _floorSize;
 public:
 	Configs();
 	~Configs();
+
+	inline std::string getMenuBGMusicPath() { return _menuBGMusic; }
 
 	inline unsigned int getFPSCap() { return _fpsCap; }
 

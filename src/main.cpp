@@ -11,6 +11,8 @@
 #include "Game.h"
 #include "configs.h"
 
+#include "Graphics/Button.h"
+
 #include "entity/Player.h"
 
 #define defaultHeight 1080
@@ -23,29 +25,6 @@
 
 std::string VERSION = "1.3.0-Beta";
 
-bool isBtnPressed(sf::Sprite btn, sf::Vector2i mousePosition)
-{
-	sf::FloatRect btnGlobalBounds = btn.getGlobalBounds();
-
-	int mouseX = mousePosition.x;
-	int mouseY = mousePosition.y;
-
-	float left = btnGlobalBounds.left;
-	float top = btnGlobalBounds.top;
-	float right = left + btnGlobalBounds.width;
-	float bottom = top + btnGlobalBounds.height;
-
-	if (left <= mouseX && mouseX <= right)
-	{
-		if (top <= mouseY && mouseY <= bottom)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 int main()
 {
 	using namespace utils;
@@ -54,7 +33,7 @@ int main()
 
 	sf::Music _mmBGMusic;
 
-	if (!_mmBGMusic.openFromFile("res/audio/-1.ogg"))
+	if (!_mmBGMusic.openFromFile(config.getMenuBGMusicPath()))
 	{
 		Output::error("An error occured while loading audio file!");
 		return -1;
@@ -66,8 +45,10 @@ int main()
 	sf::Sprite _mmBG;
 	sf::Texture _mmBGTexture;
 
-	sf::Sprite playBtn;
-	sf::Texture playTexture;
+	//sf::Sprite playBtn;
+	//sf::Texture playTexture;
+
+	Button playBtn("res/img/play.png");
 
 	sf::Sprite titleBtn;
 	sf::Texture titleTexture;
@@ -78,11 +59,13 @@ int main()
 		return -1;
 	}
 
+	/*
 	if (!playTexture.loadFromFile("res/img/play.png"))
 	{
 		Output::error("Error occured while loading play texture file!");
 		return -1;
 	}
+	*/
 
 	if (!titleTexture.loadFromFile("res/img/title.png"))
 	{
@@ -98,9 +81,11 @@ int main()
 	titleBtn.setScale(sf::Vector2f(1.125f, 1.125f));
 	titleBtn.setOrigin((titleTexture.getSize().x / 2), (titleTexture.getSize().y / 2));
 
+	/*
 	playBtn.setTexture(playTexture);
 	playBtn.setScale(sf::Vector2f(1.125f, 1.125f));
 	playBtn.setOrigin((playTexture.getSize().x / 2), (playTexture.getSize().y / 2));
+	*/
 	//_mmBG.setOrigin((_mmBGTexture.getSize().x / 2), (_mmBGTexture.getSize().y / 2));
 
 	sf::Font fpsFont;
@@ -126,20 +111,16 @@ int main()
 	Timer time;
 	float timer = 0;
 	unsigned int frames = 0;
+	_mmBGMusic.play();
 	while (window.isOpen())
-	{
-		if (_mmBGMusic.getStatus() != sf::SoundSource::Playing)
-		{
-			_mmBGMusic.play();
-		}
-
+	{		
 		sf::Event e;
 
 		window.clear(sf::Color::White);
 		window.draw(_mmBG);
 		window.draw(fpsTxt);
 		window.draw(titleBtn);
-		window.draw(playBtn);
+		window.draw(playBtn.getSprite());
 		window.display();
 
 		frames++;
@@ -214,7 +195,11 @@ int main()
 				{
 					sf::Vector2i m = sf::Mouse::getPosition(window);
 
-					std::cout << isBtnPressed(playBtn, m) << std::endl;
+					if (playBtn.isBtnPressed(m, window))
+					{
+						std::cout << playBtn.isBtnPressed(m, window) << std::endl;
+					}
+					
 					//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
 					break;
 				}
