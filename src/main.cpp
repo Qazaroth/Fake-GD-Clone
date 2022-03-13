@@ -9,6 +9,7 @@
 #include "Level/Level.h"
 
 #include "Game.h"
+#include "configs.h"
 
 #include "entity/Player.h"
 
@@ -20,25 +21,52 @@
 #define floorHeight 100.0f
 #define floorWidth 2560.0f
 
-std::string VERSION = "1.2.0-Beta";
+std::string VERSION = "1.3.0-Beta";
 
 int main()
 {
 	using namespace utils;
 
-	Game game;
+	Configs config;
+	
+	sf::Sprite _mmBG;
+	sf::Texture _mmBGTexture;
 
-	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
-	window.setFramerateLimit(game.getFPSCap());
+	sf::Sprite playBtn;
+	sf::Texture playTexture;
 
-	sf::Vector2u windowSize = window.getSize();
+	sf::Sprite titleBtn;
+	sf::Texture titleTexture;
 
-	Level mainLvl("res/data/levels/0.json", windowSize);
+	if (!_mmBGTexture.loadFromFile("res/img/bg1.png"))
+	{
+		Output::error("Error occured while loading background file!");
+		return -1;
+	}
 
-	unsigned int windWidth = windowSize.x;
-	unsigned int windHeight = windowSize.y;
+	if (!playTexture.loadFromFile("res/img/play.png"))
+	{
+		Output::error("Error occured while loading play texture file!");
+		return -1;
+	}
 
-	Player plr("res/img/000.png", 0.25f, window);
+	if (!titleTexture.loadFromFile("res/img/title.png"))
+	{
+		Output::error("Error occured while loading play texture file!");
+		return -1;
+	}
+
+	_mmBG.setTexture(_mmBGTexture);
+	_mmBG.setColor(sf::Color::Green);
+	_mmBG.setTextureRect(sf::IntRect(_mmBGTexture.getSize().x-2044, 0, 2043, 2043));
+
+	titleBtn.setTexture(titleTexture);
+	titleBtn.setOrigin((titleTexture.getSize().x / 2), (titleTexture.getSize().y / 2));
+
+	playBtn.setTexture(playTexture);
+	playBtn.setScale(sf::Vector2f(0.75f, 0.75f));
+	playBtn.setOrigin((playTexture.getSize().x / 2), (playTexture.getSize().y / 2));
+	//_mmBG.setOrigin((_mmBGTexture.getSize().x / 2), (_mmBGTexture.getSize().y / 2));
 
 	sf::Font fpsFont;
 	sf::Text fpsTxt;
@@ -49,6 +77,13 @@ int main()
 		return -1;
 	}
 
+	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
+	window.setFramerateLimit(config.getFPSCap());
+
+	titleBtn.setPosition(window.getSize().x / 2, titleBtn.getPosition().y + 225);
+	playBtn.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+	//_mmBG.setScale(sf::Vector2f(window.getSize().x / _mmBGTexture.getSize().x, window.getSize().y / _mmBGTexture.getSize().y));
+	
 	fpsTxt.setFont(fpsFont);
 	fpsTxt.setCharacterSize(24);
 	fpsTxt.setString("0 FPS");
@@ -58,23 +93,13 @@ int main()
 	unsigned int frames = 0;
 	while (window.isOpen())
 	{
-		if (game.isEnded()) return -1;
-
 		sf::Event e;
 
-		windowSize = window.getSize();
-		windWidth = windowSize.x;
-		windHeight = windowSize.y;
-
-		//sf::Vector2i m = sf::Mouse::getPosition(window);
-
-		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
-		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
-
 		window.clear(sf::Color::White);
-		mainLvl.update(window, plr, game);
+		window.draw(_mmBG);
 		window.draw(fpsTxt);
-		plr.update(window, frames, game.isPaused());
+		window.draw(titleBtn);
+		window.draw(playBtn);
 		window.display();
 
 		frames++;
@@ -98,6 +123,110 @@ int main()
 			//printf("%d FPS\n", frames);
 			frames = 0;
 		}
+
+		while (window.pollEvent(e))
+		{
+			switch (e.type)
+			{
+			case sf::Event::Closed:
+				window.close();
+				break;
+
+			case sf::Event::Resized:
+			{
+				if (e.size.width < 960)
+				{
+					e.size.width = 960;
+					window.setSize(sf::Vector2u(960, window.getSize().y));
+				}
+
+				if (e.size.height < 540)
+				{
+					e.size.height = 540;
+					window.setSize(sf::Vector2u(window.getSize().x, 540));
+				}
+
+				if (e.size.width > 2560)
+				{
+					e.size.width = 2560;
+					window.setSize(sf::Vector2u(2560, window.getSize().y));
+				}
+
+				if (e.size.height > 1440)
+				{
+					e.size.height = 1440;
+					window.setSize(sf::Vector2u(window.getSize().x, 1440));
+				}
+
+				Output::log("New WIDTH: " + std::to_string(e.size.width) + ", New HEIGHT: " + std::to_string(e.size.height));
+				break;
+			}
+
+			case sf::Event::LostFocus:
+				break;
+
+			case sf::Event::GainedFocus:
+				break;
+
+			case sf::Event::MouseButtonPressed:
+			{
+				if (e.mouseButton.button == sf::Mouse::Left)
+				{
+					sf::Vector2i m = sf::Mouse::getPosition(window);
+
+					std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+					break;
+				}
+			}
+
+			case sf::Event::KeyPressed:
+			{
+				if (e.key.code == sf::Keyboard::Escape)
+				{
+					window.close();
+					break;
+				}
+				else if (e.key.code == sf::Keyboard::Space)
+				{
+					break;
+				}
+			}
+			default:
+				break;
+			}
+		}
+	}
+
+	/*
+	sf::Vector2u windowSize = window.getSize();
+
+	Level mainLvl("res/data/levels/0.json", windowSize);
+
+	unsigned int windWidth = windowSize.x;
+	unsigned int windHeight = windowSize.y;
+
+	Player plr("res/img/000.png", 0.25f, window);
+
+	while (window.isOpen())
+	{
+		if (game.isEnded()) return -1;
+
+		sf::Event e;
+
+		windowSize = window.getSize();
+		windWidth = windowSize.x;
+		windHeight = windowSize.y;
+
+		//sf::Vector2i m = sf::Mouse::getPosition(window);
+
+		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
+
+		window.clear(sf::Color::White);
+		mainLvl.update(window, plr, game);
+		window.draw(fpsTxt);
+		plr.update(window, frames, game.isPaused());
+		window.display();
 
 		while (window.pollEvent(e))
 		{
@@ -172,6 +301,7 @@ int main()
 			}
 		}
 	}
+	*/
 
 	return 0;
 }

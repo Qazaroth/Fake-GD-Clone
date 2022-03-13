@@ -62,7 +62,6 @@ Player::~Player() {}
 void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 {
 	Configs config;
-	Game game;
 
 	//float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y / (10 / plr.getScale().y));
 	float defaultWindowHeight = config.getDefaultWindowSize().y;
@@ -108,7 +107,7 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 		else if (frames > 60 && frames <= 120) f = 120.0f;
 		else f = 144.0f;
 
-		float k = (game.getFPSCap() == 0) ? f : game.getFPSCap();
+		float k = (config.getFPSCap() == 0) ? f : config.getFPSCap();
 
 		_plr.move(0.0f, (1.25f * (f / k)));
 		_plr.rotate(_plrDefaultRotateSpeed);
