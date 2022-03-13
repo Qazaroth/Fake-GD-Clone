@@ -4,14 +4,14 @@
   "bg":  "res/img/bg.png",
   "objects": [
     {
-      "type": 1,
+      "type": 0,
       "pos_T": 566,
       "pos_Y": 160
     },
     {
-      "type": 1,
+      "type": 0,
       "pos_T": 1800,
-      "pos_Y": 80
+      "pos_Y": "height"
     }
   ]
 }

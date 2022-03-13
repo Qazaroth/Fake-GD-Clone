@@ -15,14 +15,12 @@ namespace Objects
 
 		if ((_block.getPosition().x > _windSize.x - _size) || (_block.getPosition().x < 0)) 
 		{
-			if ((_block.getPosition().y > _windSize.y - _size) || (_block.getPosition().y < 0))
-			{
-				_block.setPosition(_size, _size);
-			}
-			else
-			{
-				_block.setPosition(_size, _block.getPosition().y);
-			}
+			_block.setPosition(_size, _block.getPosition().y);
+		}
+
+		if ((_block.getPosition().y > _windSize.y - _size) || (_block.getPosition().y < 0))
+		{
+			_block.setPosition(_block.getPosition().x, _size);
 		}
 
 		_block.setFillColor(sf::Color::Black);

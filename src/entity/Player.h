@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "../Game.h"
 
 class Player
 {
@@ -24,7 +25,8 @@ private:
 	float _windowWidth = 0.0f;
 	float _windowHeight = 0.0f;
 
-	float _testVeloX = 5.0f;
+	float _plrDefaultRotateSpeed = 8.0f;
+	float _testVeloX = 3.0f;
 	sf::Vector2f _velocity;
 
 	float _jumpForce = -50.0f;

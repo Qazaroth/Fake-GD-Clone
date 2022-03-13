@@ -52,15 +52,36 @@ void Level::setup()
 
 		int type = val["type"];
 		int posT = val["pos_T"];
-		int posY = val["pos_Y"];
+		std::string posYStr;
+		int posY = 0;
+		bool isYRelative = false;
+		
+		try
+		{ 
+			posYStr = val["pos_Y"];
+			std::transform(posYStr.begin(), posYStr.end(), posYStr.begin(), [](unsigned char c) { return std::tolower(c); });
+			
+			if (posYStr == "height")
+			{
+				posY = _windowSize.y - config.getFloorSize().y;
+				isYRelative = true;
+			}
+		}
+		catch (nlohmann::detail::type_error e) 
+		{
+			posY = val["pos_Y"];
+			posYStr = std::to_string(posY);
+		}
 
-		std::list<int> values;
+		std::list<std::string> values;
 
-		values.push_back(type);
-		values.push_back(posT);
-		values.push_back(posY);
+		values.push_back(std::to_string(type));
+		values.push_back(std::to_string(posT));
+		values.push_back(posYStr);
+		values.push_back(std::to_string(posY));
+		values.push_back(std::to_string(isYRelative));
 
-		_objects.insert(std::pair<int, std::list<int>>(posT, values));
+		_objects.insert(std::pair<int, std::list<std::string>>(posT, values));
 
 		//std::cout << "[" << key << "] " << val << std::endl;
 	}
@@ -69,7 +90,7 @@ void Level::setup()
 	_IsInit = true;
 }
 
-int Level::getDataOfObject(std::list<int> values, int index)
+std::string Level::getDataOfObject(std::list<std::string> values, int index)
 {
 	using namespace std;
 
@@ -92,16 +113,38 @@ Level::~Level() {}
 
 void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 {
+	Configs config;
 	sf::FloatRect plrGlobalBounds = plr.getPlayer().getGlobalBounds();
+
+	bool isMusicPlaying = _bgMusic.getStatus() == sf::SoundSource::Playing;
+
 	if (_IsInit)
 	{
 		window.draw(_background);
 
 		_windowSize = window.getSize();
 
+		if (_renderBlocks.size() > 0)
+		{
+			for (int i = 0; i < _renderBlocks.size(); i++)
+			{
+				std::list<Objects::Block>::iterator e = _renderBlocks.begin();
+				std::advance(e, i);
+
+				Objects::Block b = (*e);
+				//sf::Vector2f newPos(-b.getSize(), 0.0f);
+
+				sf::FloatRect blockGlobalBounds = b.getObject().getGlobalBounds();
+
+				//b.move(newPos);
+				window.draw(b.getObject());
+				if (plr.collideWith(b)) game.setEnded(true);
+			}
+		}
+
 		if (!game.isPaused())
 		{
-			if (_bgMusic.getStatus() == sf::SoundSource::Playing)
+			if (isMusicPlaying)
 			{
 				_lvlTimer++;
 
@@ -109,35 +152,33 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 				{
 					auto obj = _objects.find(_lvlTimer);
 
-					int type = getDataOfObject(obj->second, 0);
-					int posT = getDataOfObject(obj->second, 1);
-					int posY = getDataOfObject(obj->second, 2);
+					int type = std::stoi(getDataOfObject(obj->second, 0));
+					int posT = std::stoi(getDataOfObject(obj->second, 1));
+					std::string posYStr = getDataOfObject(obj->second, 2);
+					auto posY = std::stoi(getDataOfObject(obj->second, 3));
+					std::string isYRelativeStr = getDataOfObject(obj->second, 4);
+					bool isYRelative;
 
-					if (type == 1)
+					// returns false on bad input
+					std::istringstream(isYRelativeStr) >> isYRelative;
+
+					if (isYRelative)
+					{
+						std::transform(posYStr.begin(), posYStr.end(), posYStr.begin(), [](unsigned char c) { return std::tolower(c); });
+
+						if (posYStr == "height")
+						{
+							posY = _windowSize.y - config.getFloorSize().y;
+						}
+					}
+
+					if (type == 0)
 					{
 						Objects::Block block(_windowSize.x - 100, posY, _windowSize);
 						_renderBlocks.push_back(block);
 						window.draw(block.getObject());
 					}
 					_objects.erase(obj);
-				}
-
-				if (_renderBlocks.size() > 0)
-				{
-					for (int i = 0; i < _renderBlocks.size(); i++)
-					{
-						std::list<Objects::Block>::iterator e = _renderBlocks.begin();
-						std::advance(e, i);
-
-						Objects::Block b = (*e);
-						sf::Vector2f newPos(-b.getSize(), 0.0f);
-
-						sf::FloatRect blockGlobalBounds = b.getObject().getGlobalBounds();
-
-						//b.move(newPos);
-						window.draw(b.getObject());
-						if (plr.collideWith(b)) game.setEnded(true);
-					}
 				}
 			}
 			else _bgMusic.play();

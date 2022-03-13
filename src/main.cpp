@@ -29,7 +29,7 @@ int main()
 	Game game;
 
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
-	//window.setFramerateLimit(60);
+	window.setFramerateLimit(game.getFPSCap());
 
 	sf::Vector2u windowSize = window.getSize();
 

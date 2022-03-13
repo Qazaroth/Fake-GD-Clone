@@ -16,6 +16,7 @@
 #include <iostream>
 #include <map>
 #include <iterator>
+#include <typeinfo>
 
 enum class ObjectType
 {
@@ -29,7 +30,7 @@ protected:
 	nlohmann::json _objsArr = nlohmann::json::array();
 
 	sf::Vector2u _windowSize;
-	std::map<int, std::list<int>> _objects;
+	std::map<int, std::list<std::string>> _objects;
 	std::list<Objects::Block> _renderBlocks;
 
 	bool _IsInit = false;
@@ -50,7 +51,7 @@ private:
 
 	void setup();
 
-	int getDataOfObject(std::list<int> values, int index);
+	std::string getDataOfObject(std::list<std::string> values, int index);
 public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();

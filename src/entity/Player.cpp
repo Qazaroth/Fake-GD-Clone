@@ -6,6 +6,7 @@ void Player::setup()
 	Configs configs;
 
 	_velocity.x = _testVeloX;
+	//_jumpForce = -50.0f;
 
 	if (!_texture.loadFromFile(_texturePath))
 	{
@@ -61,6 +62,7 @@ Player::~Player() {}
 void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 {
 	Configs config;
+	Game game;
 
 	//float maxY = windHeight - (plrTexture.getSize().y * plr.getScale().y / (10 / plr.getScale().y));
 	float defaultWindowHeight = config.getDefaultWindowSize().y;
@@ -100,8 +102,16 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 
 	if (_plr.getPosition().y < _plrDefaultPosY && !isPaused)
 	{
-		_plr.move(0.0f, 1.25f);
-		_plr.rotate((8.4375f / 60.0f) * frames);
+		float f = 0.0f;
+		if (frames <= 30) f = 30.0f;
+		else if (frames > 30 && frames <= 60) f = 60.0f;
+		else if (frames > 60 && frames <= 120) f = 120.0f;
+		else f = 144.0f;
+
+		float k = (game.getFPSCap() == 0) ? f : game.getFPSCap();
+
+		_plr.move(0.0f, (1.25f * (f / k)));
+		_plr.rotate(_plrDefaultRotateSpeed);
 	}
 
 	if (_plr.getPosition().y == _plrDefaultPosY)
