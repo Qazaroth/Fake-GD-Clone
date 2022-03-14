@@ -25,7 +25,7 @@
 #define floorHeight 100.0f
 #define floorWidth 2560.0f
 
-std::string VERSION = "1.3.0-Beta";
+std::string VERSION = "2.0.0-Beta";
 
 int main()
 {
@@ -54,8 +54,8 @@ int main()
 	fpsText.setCharacterSize(24);
 
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
-	//window.setFramerateLimit(config.getFPSCap());
-	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(config.getFPSCap());
+	//window.setVerticalSyncEnabled(config.isVSyncEnabled());
 
 	title.setPosition((window.getSize().x / 2) - 10, title.getPosition().y + 150);
 	playBtn.setPosition(window.getSize().x / 2, window.getSize().y / 2);

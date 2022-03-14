@@ -14,6 +14,8 @@ private:
 
 	unsigned int _fpsCap = 60;
 
+	bool _enabledVSync = false;
+
 	std::string _menuBGMusic = "res/audio/menu.ogg";
 
 	sf::Vector2f _floorSize;
@@ -21,7 +23,11 @@ public:
 	Configs();
 	~Configs();
 
+	void toggleVSync() { _enabledVSync = !_enabledVSync; _fpsCap = 0; }
+
 	inline std::string getMenuBGMusicPath() { return _menuBGMusic; }
+
+	inline bool isVSyncEnabled() { return _enabledVSync; }
 
 	inline unsigned int getFPSCap() { return _fpsCap; }
 
