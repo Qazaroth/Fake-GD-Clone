@@ -8,7 +8,6 @@ void Button::setup()
 	if (!_btnTex.loadFromFile(_imgPath))
 	{
 		std::cout << "[ERROR] Error occured while loading play texture file!" << std::endl;
-		isReady = false;
 		return;
 	}
 
@@ -18,6 +17,8 @@ void Button::setup()
 	_btn.setPosition(0, 0);
 }
 // Public
+Button::Button() {}
+
 Button::Button(std::string imgPath) : _imgPath(imgPath)
 {
 	setup();
@@ -25,7 +26,7 @@ Button::Button(std::string imgPath) : _imgPath(imgPath)
 
 Button::~Button() {}
 
-bool Button::isBtnPressed(sf::Vector2i mousePosition, sf::RenderWindow &window)
+bool Button::isMouseOnBtn(sf::Vector2i mousePosition, sf::RenderWindow &window)
 {
 	sf::FloatRect btnGlobalBounds = _btn.getGlobalBounds();
 
@@ -60,17 +61,27 @@ void Button::setPosition(unsigned int x, unsigned int y)
 	_btn.setPosition(pos);
 }
 
+void Button::resetScale()
+{
+	_btnScale.x = 1.125f;
+	_btnScale.y = 1.125f;
+	_btn.setScale(_btnScale);
+}
+
 void Button::setScale(float x)
 {
 	_btnScale = sf::Vector2f(x, x);
+	_btn.setScale(_btnScale);
 }
 
 void Button::setScale(float x, float y)
 {
 	_btnScale = sf::Vector2f(x, y);
+	_btn.setScale(_btnScale);
 }
 
 void Button::setScale(sf::Vector2f newScale)
 {
 	_btnScale = newScale;
+	_btn.setScale(newScale);
 }

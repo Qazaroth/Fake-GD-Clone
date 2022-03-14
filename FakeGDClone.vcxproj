@@ -145,10 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Image.h" />
+    <ClInclude Include="src\Graphics\scenes\Menu\MainMenu.h" />
     <ClInclude Include="src\configs.h" />
     <ClInclude Include="src\entity\Player.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Graphics\Button.h" />
+    <ClInclude Include="src\Graphics\Text.h" />
     <ClInclude Include="src\Graphics\Window.h" />
     <ClInclude Include="src\Level\Level.h" />
     <ClInclude Include="src\Level\objects\Block.h" />
@@ -157,10 +160,13 @@
     <ClInclude Include="src\utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Image.cpp" />
+    <ClCompile Include="src\Graphics\scenes\Menu\MainMenu.cpp" />
     <ClCompile Include="src\configs.cpp" />
     <ClCompile Include="src\entity\Player.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics\Button.cpp" />
+    <ClCompile Include="src\Graphics\Text.cpp" />
     <ClCompile Include="src\Graphics\Window.cpp" />
     <ClCompile Include="src\Level\Level.cpp" />
     <ClCompile Include="src\Level\objects\Block.cpp" />

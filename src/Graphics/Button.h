@@ -6,8 +6,6 @@
 
 class Button
 {
-protected:
-	bool isReady = false;
 private:
 	sf::Sprite _btn;
 	sf::Texture _btnTex;
@@ -18,14 +16,16 @@ private:
 
 	void setup();
 public:
+	Button();
 	Button(std::string imgPath);
 	~Button();
 
-	bool isBtnPressed(sf::Vector2i mousePosition, sf::RenderWindow &window);
+	bool isMouseOnBtn(sf::Vector2i mousePosition, sf::RenderWindow &window);
 
 	void setPosition(sf::Vector2f pos);
 	void setPosition(unsigned int x, unsigned int y);
 
+	void resetScale();
 	void setScale(float x);
 	void setScale(float x, float y);
 	void setScale(sf::Vector2f newScale);

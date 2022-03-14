@@ -12,6 +12,8 @@
 #include "configs.h"
 
 #include "Graphics/Button.h"
+#include "Graphics/Text.h"
+#include "Graphics/Image.h"
 
 #include "entity/Player.h"
 
@@ -27,9 +29,8 @@ std::string VERSION = "1.3.0-Beta";
 
 int main()
 {
-	using namespace utils;
-
 	Configs config;
+	Game game;
 
 	sf::Music _mmBGMusic;
 
@@ -42,84 +43,48 @@ int main()
 	_mmBGMusic.setLoop(true);
 	_mmBGMusic.setVolume(18.75f);
 	
-	sf::Sprite _mmBG;
-	sf::Texture _mmBGTexture;
-
-	//sf::Sprite playBtn;
-	//sf::Texture playTexture;
-
+	Image bg("res/img/bg1.png", true);
 	Button playBtn("res/img/play.png");
+	Image title("res/img/title.png");
 
-	sf::Sprite titleBtn;
-	sf::Texture titleTexture;
+	//bg.setColor(sf::Color::Green);
+	bg.getSprite().setTextureRect(sf::IntRect(bg.getTexture().getSize().x-2044, 0, 2043, 2043));
 
-	if (!_mmBGTexture.loadFromFile("res/img/bg1.png"))
-	{
-		Output::error("Error occured while loading background file!");
-		return -1;
-	}
-
-	/*
-	if (!playTexture.loadFromFile("res/img/play.png"))
-	{
-		Output::error("Error occured while loading play texture file!");
-		return -1;
-	}
-	*/
-
-	if (!titleTexture.loadFromFile("res/img/title.png"))
-	{
-		Output::error("Error occured while loading play texture file!");
-		return -1;
-	}
-
-	_mmBG.setTexture(_mmBGTexture);
-	_mmBG.setColor(sf::Color::Green);
-	_mmBG.setTextureRect(sf::IntRect(_mmBGTexture.getSize().x-2044, 0, 2043, 2043));
-
-	titleBtn.setTexture(titleTexture);
-	titleBtn.setScale(sf::Vector2f(1.125f, 1.125f));
-	titleBtn.setOrigin((titleTexture.getSize().x / 2), (titleTexture.getSize().y / 2));
-
-	/*
-	playBtn.setTexture(playTexture);
-	playBtn.setScale(sf::Vector2f(1.125f, 1.125f));
-	playBtn.setOrigin((playTexture.getSize().x / 2), (playTexture.getSize().y / 2));
-	*/
-	//_mmBG.setOrigin((_mmBGTexture.getSize().x / 2), (_mmBGTexture.getSize().y / 2));
-
-	sf::Font fpsFont;
-	sf::Text fpsTxt;
-
-	if (!fpsFont.loadFromFile("res/fonts/arial.ttf"))
-	{
-		std::cout << "[ERROR] Error occured while loading font file!" << std::endl;
-		return -1;
-	}
+	Text fpsText("res/fonts/arial.ttf", "0 FPS");
+	fpsText.setCharacterSize(24);
 
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
-	window.setFramerateLimit(config.getFPSCap());
+	//window.setFramerateLimit(config.getFPSCap());
+	window.setVerticalSyncEnabled(true);
 
-	titleBtn.setPosition((window.getSize().x / 2) - 10, titleBtn.getPosition().y + 150);
+	title.setPosition((window.getSize().x / 2) - 10, title.getPosition().y + 150);
 	playBtn.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 	//_mmBG.setScale(sf::Vector2f(window.getSize().x / _mmBGTexture.getSize().x, window.getSize().y / _mmBGTexture.getSize().y));
-	
-	fpsTxt.setFont(fpsFont);
-	fpsTxt.setCharacterSize(24);
-	fpsTxt.setString("0 FPS");
 
-	Timer time;
+	utils::Timer time;
 	float timer = 0;
 	unsigned int frames = 0;
 	_mmBGMusic.play();
 	while (window.isOpen())
 	{		
 		sf::Event e;
+		sf::Vector2i m = sf::Mouse::getPosition(window);
+
+		if (playBtn.isMouseOnBtn(m, window))
+		{
+			playBtn.setScale(1.25f);
+		}
+		else
+		{
+			playBtn.resetScale();
+		}
 
 		window.clear(sf::Color::White);
-		window.draw(_mmBG);
-		window.draw(fpsTxt);
-		window.draw(titleBtn);
+		window.draw(bg.getSprite());
+
+		if (game.showFPS()) window.draw(fpsText.getSFText());
+
+		window.draw(title.getSprite());
 		window.draw(playBtn.getSprite());
 		window.display();
 
@@ -127,21 +92,24 @@ int main()
 		if (time.elapsed() - timer > 1.0f)
 		{
 			timer += 1.0f;
-			if (frames < 60)
+			if (game.showFPS())
 			{
-				fpsTxt.setFillColor(sf::Color(255, 0, 0));
-			}
-			else if (frames >= 60 && frames < 120)
-			{
-				fpsTxt.setFillColor(sf::Color(0, 255, 0));
-			}
-			else
-			{
-				fpsTxt.setFillColor(sf::Color(255, 215, 0));
-			}
+				if (frames < 60)
+				{
+					fpsText.setFillColor(sf::Color(255, 0, 0));
+				}
+				else if (frames >= 60 && frames < 120)
+				{
+					fpsText.setFillColor(sf::Color(0, 255, 0));
+				}
+				else
+				{
+					fpsText.setFillColor(sf::Color(255, 215, 0));
+				}
 
-			fpsTxt.setString(std::to_string(frames) + " FPS");
-			//printf("%d FPS\n", frames);
+				fpsText.setText(std::to_string(frames) + " FPS");
+			}
+			printf("%d FPS\n", frames);
 			frames = 0;
 		}
 
@@ -193,14 +161,10 @@ int main()
 			{
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{
-					sf::Vector2i m = sf::Mouse::getPosition(window);
-
-					if (playBtn.isBtnPressed(m, window))
+					if (playBtn.isMouseOnBtn(m, window))
 					{
-						std::cout << playBtn.isBtnPressed(m, window) << std::endl;
+						std::cout << playBtn.isMouseOnBtn(m, window) << std::endl;
 					}
-					
-					//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
 					break;
 				}
 			}
@@ -214,6 +178,11 @@ int main()
 				}
 				else if (e.key.code == sf::Keyboard::Space)
 				{
+					break;
+				}
+				else if (e.key.code == sf::Keyboard::F3)
+				{
+					game.toggleFPSCounter();
 					break;
 				}
 			}

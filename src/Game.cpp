@@ -15,3 +15,8 @@ void Game::setEnded(bool isEnded)
 {
 	_isEnded = isEnded;
 }
+
+void Game::toggleFPSCounter()
+{
+	_showFPSCounter = !_showFPSCounter;
+}
