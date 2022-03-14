@@ -16,7 +16,14 @@ void Image::setup()
 
 	if (_isBG)
 	{
-		_imgSprite.setColor(sf::Color::Green);
+		int min = 0;
+		int max = 255;
+
+		int r = min + (std::rand() % (max - min + 1));
+		int g = min + (std::rand() % (max - min + 1));
+		int b = min + (std::rand() % (max - min + 1));
+
+		_imgSprite.setColor(sf::Color(r, g, b));
 	}
 
 	_imgSprite.setScale(_imgScale);

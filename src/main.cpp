@@ -8,6 +8,8 @@
 #include "utils/Timer.h"
 #include "Level/Level.h"
 
+#include "Graphics/scenes/Menu/MainMenu.h"
+
 #include "Game.h"
 #include "configs.h"
 
@@ -31,61 +33,30 @@ int main()
 {
 	Configs config;
 	Game game;
+	utils::Timer time;
 
-	sf::Music _mmBGMusic;
-
-	if (!_mmBGMusic.openFromFile(config.getMenuBGMusicPath()))
-	{
-		Output::error("An error occured while loading audio file!");
-		return -1;
-	}
-
-	_mmBGMusic.setLoop(true);
-	_mmBGMusic.setVolume(18.75f);
-	
-	Image bg("res/img/bg1.png", true);
-	Button playBtn("res/img/play.png");
-	Image title("res/img/title.png");
-
-	//bg.setColor(sf::Color::Green);
-	bg.getSprite().setTextureRect(sf::IntRect(bg.getTexture().getSize().x-2044, 0, 2043, 2043));
-
-	Text fpsText("res/fonts/arial.ttf", "0 FPS");
-	fpsText.setCharacterSize(24);
+	float timer = 0;
+	unsigned int frames = 0;
 
 	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
 	window.setFramerateLimit(config.getFPSCap());
-	//window.setVerticalSyncEnabled(config.isVSyncEnabled());
 
-	title.setPosition((window.getSize().x / 2) - 10, title.getPosition().y + 150);
-	playBtn.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-	//_mmBG.setScale(sf::Vector2f(window.getSize().x / _mmBGTexture.getSize().x, window.getSize().y / _mmBGTexture.getSize().y));
+	MainMenu mainMenu(window.getSize());
+	Text fpsText("res/fonts/arial.ttf", "0 FPS");
 
-	utils::Timer time;
-	float timer = 0;
-	unsigned int frames = 0;
-	_mmBGMusic.play();
+	fpsText.setCharacterSize(24);
+
+	mainMenu.playBGM();
 	while (window.isOpen())
 	{		
 		sf::Event e;
 		sf::Vector2i m = sf::Mouse::getPosition(window);
 
-		if (playBtn.isMouseOnBtn(m, window))
-		{
-			playBtn.setScale(1.25f);
-		}
-		else
-		{
-			playBtn.resetScale();
-		}
+		mainMenu.update(window);
 
 		window.clear(sf::Color::White);
-		window.draw(bg.getSprite());
-
+		mainMenu.draw(window);
 		if (game.showFPS()) window.draw(fpsText.getSFText());
-
-		window.draw(title.getSprite());
-		window.draw(playBtn.getSprite());
 		window.display();
 
 		frames++;
@@ -94,19 +65,16 @@ int main()
 			timer += 1.0f;
 			if (game.showFPS())
 			{
+				/*
 				if (frames < 60)
 				{
 					fpsText.setFillColor(sf::Color(255, 0, 0));
 				}
-				else if (frames >= 60 && frames < 120)
-				{
-					fpsText.setFillColor(sf::Color(0, 255, 0));
-				}
 				else
 				{
-					fpsText.setFillColor(sf::Color(255, 215, 0));
+					fpsText.setFillColor(sf::Color::White);
 				}
-
+				*/
 				fpsText.setText(std::to_string(frames) + " FPS");
 			}
 			printf("%d FPS\n", frames);
@@ -147,7 +115,6 @@ int main()
 					window.setSize(sf::Vector2u(window.getSize().x, 1440));
 				}
 
-				Output::log("New WIDTH: " + std::to_string(e.size.width) + ", New HEIGHT: " + std::to_string(e.size.height));
 				break;
 			}
 
@@ -161,9 +128,9 @@ int main()
 			{
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{
-					if (playBtn.isMouseOnBtn(m, window))
+					if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
 					{
-						std::cout << playBtn.isMouseOnBtn(m, window) << std::endl;
+						std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
 					}
 					break;
 				}
