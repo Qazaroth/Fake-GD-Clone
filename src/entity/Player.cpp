@@ -115,12 +115,13 @@ void Player::update(sf::RenderWindow &window, int frames, Game &game)
 
 			k = (config.getFPSCap() == 0) ? f : config.getFPSCap();*/
 
-			_plr.move(0.0f, (1.25f * (1.25) * (f / k)));
+			_plr.move(0.0f, (1.25f * (1.25) * (125/50) * (f / k)));
 			_plr.rotate(_plrDefaultRotateSpeed);
 		}
 
 		if (_plr.getPosition().y == _plrDefaultPosY)
 		{
+			_isJumping = false;
 			_plr.setRotation(0.0f);
 		}
 
@@ -131,6 +132,7 @@ void Player::update(sf::RenderWindow &window, int frames, Game &game)
 	}
 	else
 	{
+		_isJumping = false;
 		_plr.setPosition(_plrDefaultPosX, _plrDefaultPosY);
 	}
 }
@@ -147,7 +149,11 @@ void Player::draw(sf::RenderWindow &window)
 
 void Player::jump()
 {
-	_plr.move(sf::Vector2f(0.0f, _jumpForce));
+	if (!_isJumping)
+	{
+		_plr.move(sf::Vector2f(0.0f, _jumpForce));
+		_isJumping = true;
+	}
 }
 
 bool Player::collideWith(Objects::Block &block)

@@ -17,6 +17,8 @@ private:
 
 	std::string _texturePath;
 
+	bool _isJumping = false;
+
 	int _plrDefaultOffsetX = 5;
 	int _plrDefaultOffsetY = 39;
 	float _plrDefaultPosX = 0.0f;
@@ -29,7 +31,7 @@ private:
 	float _testVeloX = 3.0f;
 	sf::Vector2f _velocity;
 
-	float _jumpForce = -50.0f;
+	float _jumpForce = -100.0f;
 
 	void setup();
 public:

@@ -58,6 +58,7 @@ public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
+	void reloadData();
 	void resetLevel();
 
 	void stopBGMusic();

@@ -93,6 +93,7 @@ int main()
 		{
 		case GameState::IN_MAINMENU:
 			mainLvl.stopBGMusic();
+			mainLvl.resetLevel();
 			plr.reset();
 			mainMenu.playBGM();
 			mainMenu.update(window);

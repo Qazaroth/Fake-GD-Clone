@@ -111,10 +111,60 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
+void Level::reloadData()
+{
+	Configs config;
+
+	_lvlJson = nlohmann::json::parse(_lvlData);
+	_objsArr = _lvlJson["objects"];
+
+	for (auto i : _objsArr.items())
+	{
+		auto key = i.key();
+		auto val = i.value();
+
+		int type = val["type"];
+		int posT = val["pos_T"];
+		std::string posYStr;
+		int posY = 0;
+		bool isYRelative = false;
+
+		try
+		{
+			posYStr = val["pos_Y"];
+			std::transform(posYStr.begin(), posYStr.end(), posYStr.begin(), [](unsigned char c) { return std::tolower(c); });
+
+			if (posYStr == "height")
+			{
+				posY = _windowSize.y - config.getFloorSize().y;
+				isYRelative = true;
+			}
+		}
+		catch (nlohmann::detail::type_error e)
+		{
+			posY = val["pos_Y"];
+			posYStr = std::to_string(posY);
+		}
+
+		std::list<std::string> values;
+
+		values.push_back(std::to_string(type));
+		values.push_back(std::to_string(posT));
+		values.push_back(posYStr);
+		values.push_back(std::to_string(posY));
+		values.push_back(std::to_string(isYRelative));
+
+		_objects.insert(std::pair<int, std::list<std::string>>(posT, values));
+
+		//std::cout << "[" << key << "] " << val << std::endl;
+	}
+}
+
 void Level::resetLevel()
 {
 	stopBGMusic();
-
+	_objects.clear();
+	_renderBlocks.clear();
 	_lvlTimer = 0;
 }
 
@@ -126,6 +176,10 @@ void Level::stopBGMusic()
 void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 {
 	Configs config;
+
+	if (_objects.empty())
+		reloadData();
+
 	sf::FloatRect plrGlobalBounds = plr.getPlayer().getGlobalBounds();
 
 	bool isMusicPlaying = _bgMusic.getStatus() == sf::SoundSource::Playing;
