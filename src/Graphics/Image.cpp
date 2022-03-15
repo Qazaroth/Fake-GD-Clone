@@ -19,9 +19,9 @@ void Image::setup()
 		int min = 0;
 		int max = 255;
 
-		int r = min + (std::rand() % (max - min + 1));
-		int g = min + (std::rand() % (max - min + 1));
-		int b = min + (std::rand() % (max - min + 1));
+		int r = randomInt(min, max);
+		int g = randomInt(min, max);
+		int b = randomInt(min, max);
 
 		_imgSprite.setColor(sf::Color(r, 0, 0));
 	}

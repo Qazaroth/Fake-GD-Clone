@@ -22,7 +22,7 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
-std::string VERSION = "2.1.0-Beta";
+std::string VERSION = "2.1.1-Beta";
 std::string TITLE = "Fake GD Clone [" + VERSION + "]";
 sf::VideoMode windowDimension(defaultWidth, defaultHeight);
 

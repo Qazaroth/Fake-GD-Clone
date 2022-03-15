@@ -26,12 +26,10 @@ void MainMenu::setup()
 	int g = min + (std::rand() % (max - min + 1));
 	int b = min + (std::rand() % (max - min + 1));
 
-	_bg.setColor(sf::Color(r, 0, 0));
+	_bg.setColor(sf::Color(r, g, b));
 
 	_bg.setOrigin(_bgTexture.getSize().x / 2, _bgTexture.getSize().y / 2);
 	_bg.setTexture(_bgTexture);
-
-	std::cout << imgPath << std::endl;
 
 	if (!_bgMusic.openFromFile(config.getMenuBGMusicPath()))
 	{

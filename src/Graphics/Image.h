@@ -4,6 +4,8 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+#include "../utils/Random.h"
+
 class Image
 {
 private:
