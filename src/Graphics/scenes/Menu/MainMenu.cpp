@@ -4,6 +4,34 @@
 void MainMenu::setup()
 {
 	Configs config;
+	srand(time(NULL));
+	
+	int s = 1 + (std::rand() % (20 - 1 + 1));
+	std::string imgPath = "";
+
+	if (s < 10) imgPath = "res/img/game_bg_0" + std::to_string(s) + "_001-uhd.png";
+	else imgPath = "res/img/game_bg_" + std::to_string(s) + "_001-uhd.png";
+	//_bg = Image("res/img/game_bg_01_001.png", true, true);
+
+	if (!_bgTexture.loadFromFile(imgPath))
+	{
+		std::cout << "Error occured while loading background file!" << std::endl;
+		return;
+	}
+
+	int min = 0;
+	int max = 255;
+
+	int r = min + (std::rand() % (max - min + 1));
+	int g = min + (std::rand() % (max - min + 1));
+	int b = min + (std::rand() % (max - min + 1));
+
+	_bg.setColor(sf::Color(r, 0, 0));
+
+	_bg.setOrigin(_bgTexture.getSize().x / 2, _bgTexture.getSize().y / 2);
+	_bg.setTexture(_bgTexture);
+
+	std::cout << imgPath << std::endl;
 
 	if (!_bgMusic.openFromFile(config.getMenuBGMusicPath()))
 	{
@@ -16,12 +44,17 @@ void MainMenu::setup()
 
 	_title.setPosition((_windowSize.x / 2) - 10, _title.getPosition().y + 150);
 	_playBtn.setPosition(_windowSize.x / 2, _windowSize.y / 2);
+	_bg.setPosition(_windowSize.x / 2, _windowSize.y / 2);
 	
-	float x = (_windowSize.x / _bg.getSprite().getLocalBounds().width) * 2; //(_bg.getTexture().getSize().x / _windowSize.x) / 2;
-	float y = (_windowSize.y / _bg.getSprite().getLocalBounds().height) * 2;
-	std::cout << x << std::endl;
-	std::cout << y << std::endl;
+	//float yOff = (512.0f / _bg.getTexture().getSize().y);
+	float x = (_windowSize.x / _bg.getLocalBounds().width);// *2; //(_bg.getTexture().getSize().x / _windowSize.x) / 2;
+	float y = (_windowSize.y / _bg.getLocalBounds().height);// *2;
+
+	if (x < 1.0f) x = 1.0f;
+	if (y < 1.0f) y = 1.0f;
+
 	_bg.setScale(x, y);
+	//_bg.setPosition(_windowSize.x / 2, _windowSize.y / 2);
 }
 // Public
 MainMenu::MainMenu(sf::Vector2u windowSize) : _windowSize(windowSize)
@@ -63,7 +96,7 @@ void MainMenu::pauseBGM()
 
 void MainMenu::draw(sf::RenderWindow &window)
 {
-	window.draw(_bg.getSprite());
+	window.draw(_bg);
 	window.draw(_title.getSprite());
 	window.draw(_playBtn.getSprite());
 }

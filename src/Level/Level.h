@@ -6,6 +6,8 @@
 #include "../configs.h"
 #include "../Game.h"
 
+#include "../Graphics/Image.h"
+
 #include "objects/Block.h"
 #include "../entity/Player.h"
 

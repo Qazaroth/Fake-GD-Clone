@@ -7,6 +7,7 @@
 #include "../../../configs.h"
 
 #include <iostream>
+#include <time.h>
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -18,7 +19,10 @@ private:
 
 	sf::Vector2u _windowSize;
 
-	Image _bg = Image("res/img/game_bg_01_001-uhd.png", true);//Image("res/img/bg1.png", true);
+	//Image _bg;//Image("res/img/bg1.png", true);
+	sf::Sprite _bg;
+	sf::Texture _bgTexture;
+
 	Image _title = Image("res/img/title.png");
 	Button _playBtn = Button("res/img/play.png");
 

@@ -18,8 +18,11 @@ private:
 
 	void setup();
 public:
-	Image(std::string imgPath, bool isBG=false);
+	Image();
+	Image(std::string imgPath, bool isBG=false, bool preload=true);
 	~Image();
+
+	void loadImage();
 
 	void resetScale();
 	void setScale(float x);

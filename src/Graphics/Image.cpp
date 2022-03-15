@@ -23,20 +23,28 @@ void Image::setup()
 		int g = min + (std::rand() % (max - min + 1));
 		int b = min + (std::rand() % (max - min + 1));
 
-		_imgSprite.setColor(sf::Color(r, g, b));
+		_imgSprite.setColor(sf::Color(r, 0, 0));
 	}
 	_imgSprite.setScale(_imgScale);
 	_imgSprite.setOrigin((_imgTexture.getSize().x / 2), (_imgTexture.getSize().y / 2));
 }
 
 // Public
-Image::Image(std::string imgPath, bool isBG) : _imgPath(imgPath), _isBG(isBG)
+Image::Image() {}
+
+Image::Image(std::string imgPath, bool isBG, bool preload) : _imgPath(imgPath), _isBG(isBG)
 {
-	setup();
+	if (preload)
+		setup();
 }
 
 Image::~Image()
 {}
+
+void Image::loadImage()
+{
+	setup();
+}
 
 void Image::resetScale()
 {

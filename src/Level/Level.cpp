@@ -114,6 +114,8 @@ Level::~Level() {}
 void Level::resetLevel()
 {
 	stopBGMusic();
+
+	_lvlTimer = 0;
 }
 
 void Level::stopBGMusic()
