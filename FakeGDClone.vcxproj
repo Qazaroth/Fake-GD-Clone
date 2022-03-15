@@ -152,7 +152,6 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Graphics\Button.h" />
     <ClInclude Include="src\Graphics\Text.h" />
-    <ClInclude Include="src\Graphics\Window.h" />
     <ClInclude Include="src\Level\Level.h" />
     <ClInclude Include="src\Level\objects\Block.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
@@ -167,7 +166,6 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics\Button.cpp" />
     <ClCompile Include="src\Graphics\Text.cpp" />
-    <ClCompile Include="src\Graphics\Window.cpp" />
     <ClCompile Include="src\Level\Level.cpp" />
     <ClCompile Include="src\Level\objects\Block.cpp" />
     <ClCompile Include="src\main.cpp" />

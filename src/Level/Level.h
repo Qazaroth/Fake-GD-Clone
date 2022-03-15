@@ -56,6 +56,10 @@ public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
+	void resetLevel();
+
+	void stopBGMusic();
+
 	void update(sf::RenderWindow &window, Player &plr, Game &game);
 
 	inline nlohmann::json getLevelJSON() { return _lvlJson; }

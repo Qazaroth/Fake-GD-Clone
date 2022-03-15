@@ -111,6 +111,16 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
+void Level::resetLevel()
+{
+	stopBGMusic();
+}
+
+void Level::stopBGMusic()
+{
+	_bgMusic.stop();
+}
+
 void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 {
 	Configs config;

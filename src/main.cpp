@@ -22,7 +22,7 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
-std::string VERSION = "2.0.0-Beta";
+std::string VERSION = "2.1.0-Beta";
 std::string TITLE = "Fake GD Clone [" + VERSION + "]";
 sf::VideoMode windowDimension(defaultWidth, defaultHeight);
 
@@ -90,6 +90,7 @@ int main()
 		switch (gameState)
 		{
 		case GameState::IN_MAINMENU:
+			mainLvl.stopBGMusic();
 			mainMenu.playBGM();
 			mainMenu.update(window);
 			break;
@@ -187,8 +188,17 @@ int main()
 			{
 				if (e.key.code == sf::Keyboard::Escape)
 				{
-					window.close();
-					break;
+					switch (gameState)
+					{
+					case GameState::IN_LEVEL:
+						game.setGameState(GameState::IN_MAINMENU);
+						break;
+					case GameState::IN_MAINMENU:
+					default:
+						window.close();
+						break;
+					}
+					
 				}
 				else if (e.key.code == sf::Keyboard::Space)
 				{
