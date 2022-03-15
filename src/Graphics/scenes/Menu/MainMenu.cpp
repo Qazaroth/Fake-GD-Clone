@@ -16,6 +16,12 @@ void MainMenu::setup()
 
 	_title.setPosition((_windowSize.x / 2) - 10, _title.getPosition().y + 150);
 	_playBtn.setPosition(_windowSize.x / 2, _windowSize.y / 2);
+	
+	float x = (_windowSize.x / _bg.getSprite().getLocalBounds().width) * 2; //(_bg.getTexture().getSize().x / _windowSize.x) / 2;
+	float y = (_windowSize.y / _bg.getSprite().getLocalBounds().height) * 2;
+	std::cout << x << std::endl;
+	std::cout << y << std::endl;
+	_bg.setScale(x, y);
 }
 // Public
 MainMenu::MainMenu(sf::Vector2u windowSize) : _windowSize(windowSize)

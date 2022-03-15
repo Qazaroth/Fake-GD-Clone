@@ -31,6 +31,8 @@ Game game;
 utils::Timer timer;
 Text fpsText("res/fonts/arial.ttf", "0 FPS");
 
+std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+
 float timerCounter = 0;
 unsigned int frames = 0;
 
@@ -64,8 +66,8 @@ void resizeHandler(sf::Event e, sf::RenderWindow &window)
 int main()
 {
 	fpsText.setCharacterSize(24);
-
-	sf::RenderWindow window(windowDimension, TITLE, sf::Style::Default);
+	sf::Uint32 mStyleFlag = sf::Style::Default | sf::Style::Fullscreen;
+	sf::RenderWindow window(VModes.at(0), TITLE, mStyleFlag); //window(windowDimension, TITLE, sf::Style::Default);
 	window.setFramerateLimit(config.getFPSCap());
 
 	sf::Vector2u windowSize = window.getSize();
@@ -96,7 +98,7 @@ int main()
 			break;
 		case GameState::IN_LEVEL:
 			mainMenu.stopBGM();
-			plr.update(window, frames, game.isPaused());
+			plr.update(window, frames, game);
 			break;
 		default:
 			mainMenu.update(window);

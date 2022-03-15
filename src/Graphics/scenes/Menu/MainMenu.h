@@ -18,7 +18,7 @@ private:
 
 	sf::Vector2u _windowSize;
 
-	Image _bg = Image("res/img/bg1.png", true);
+	Image _bg = Image("res/img/game_bg_01_001-uhd.png", true);//Image("res/img/bg1.png", true);
 	Image _title = Image("res/img/title.png");
 	Button _playBtn = Button("res/img/play.png");
 

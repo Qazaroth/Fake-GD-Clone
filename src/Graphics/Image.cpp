@@ -25,7 +25,6 @@ void Image::setup()
 
 		_imgSprite.setColor(sf::Color(r, g, b));
 	}
-
 	_imgSprite.setScale(_imgScale);
 	_imgSprite.setOrigin((_imgTexture.getSize().x / 2), (_imgTexture.getSize().y / 2));
 }
