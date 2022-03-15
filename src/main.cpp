@@ -22,61 +22,109 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
-#define jumpForce -50.0f
-
-#define floorHeight 100.0f
-#define floorWidth 2560.0f
-
 std::string VERSION = "2.0.0-Beta";
+std::string TITLE = "Fake GD Clone [" + VERSION + "]";
+sf::VideoMode windowDimension(defaultWidth, defaultHeight);
+
+Configs config;
+Game game;
+utils::Timer timer;
+Text fpsText("res/fonts/arial.ttf", "0 FPS");
+
+float timerCounter = 0;
+unsigned int frames = 0;
+
+void resizeHandler(sf::Event e, sf::RenderWindow &window)
+{
+	if (e.size.width < 960)
+	{
+		e.size.width = 960;
+		window.setSize(sf::Vector2u(960, window.getSize().y));
+	}
+
+	if (e.size.height < 540)
+	{
+		e.size.height = 540;
+		window.setSize(sf::Vector2u(window.getSize().x, 540));
+	}
+
+	if (e.size.width > 2560)
+	{
+		e.size.width = 2560;
+		window.setSize(sf::Vector2u(2560, window.getSize().y));
+	}
+
+	if (e.size.height > 1440)
+	{
+		e.size.height = 1440;
+		window.setSize(sf::Vector2u(window.getSize().x, 1440));
+	}
+}
 
 int main()
 {
-	Configs config;
-	Game game;
-	utils::Timer time;
-
-	float timer = 0;
-	unsigned int frames = 0;
-
-	sf::RenderWindow window(sf::VideoMode(defaultWidth, defaultHeight), "Fake GD Clone [" + VERSION + "]", sf::Style::Default);
-	window.setFramerateLimit(config.getFPSCap());
-
-	MainMenu mainMenu(window.getSize());
-	Text fpsText("res/fonts/arial.ttf", "0 FPS");
-
 	fpsText.setCharacterSize(24);
 
-	mainMenu.playBGM();
+	sf::RenderWindow window(windowDimension, TITLE, sf::Style::Default);
+	window.setFramerateLimit(config.getFPSCap());
+
+	sf::Vector2u windowSize = window.getSize();
+
+	Level mainLvl("res/data/levels/0.json", windowSize);
+	MainMenu mainMenu(window.getSize());
+
+	unsigned int windWidth = windowSize.x;
+	unsigned int windHeight = windowSize.y;
+
+	Player plr("res/img/000.png", 0.25f, window);
+
 	while (window.isOpen())
 	{		
+		if (game.isEnded()) return -1;
+
 		sf::Event e;
 		sf::Vector2i m = sf::Mouse::getPosition(window);
 
-		mainMenu.update(window);
+		GameState gameState = game.getGameState();
+
+		switch (gameState)
+		{
+		case GameState::IN_MAINMENU:
+			mainMenu.playBGM();
+			mainMenu.update(window);
+			break;
+		case GameState::IN_LEVEL:
+			mainMenu.stopBGM();
+			plr.update(window, frames, game.isPaused());
+			break;
+		default:
+			mainMenu.update(window);
+			break;
+		}
+		
 
 		window.clear(sf::Color::White);
-		mainMenu.draw(window);
+		switch (gameState)
+		{
+		case GameState::IN_MAINMENU:
+			mainMenu.draw(window);
+			break;
+		case GameState::IN_LEVEL:
+			mainLvl.update(window, plr, game);
+			plr.draw(window);
+			break;
+		default:
+			mainMenu.draw(window);
+			break;
+		}
 		if (game.showFPS()) window.draw(fpsText.getSFText());
 		window.display();
 
 		frames++;
-		if (time.elapsed() - timer > 1.0f)
+		if (timer.elapsed() - timerCounter > 1.0f)
 		{
-			timer += 1.0f;
-			if (game.showFPS())
-			{
-				/*
-				if (frames < 60)
-				{
-					fpsText.setFillColor(sf::Color(255, 0, 0));
-				}
-				else
-				{
-					fpsText.setFillColor(sf::Color::White);
-				}
-				*/
-				fpsText.setText(std::to_string(frames) + " FPS");
-			}
+			timerCounter += 1.0f;
+			if (game.showFPS()) fpsText.setText(std::to_string(frames) + " FPS");
 			printf("%d FPS\n", frames);
 			frames = 0;
 		}
@@ -91,49 +139,48 @@ int main()
 
 			case sf::Event::Resized:
 			{
-				if (e.size.width < 960)
-				{
-					e.size.width = 960;
-					window.setSize(sf::Vector2u(960, window.getSize().y));
-				}
-
-				if (e.size.height < 540)
-				{
-					e.size.height = 540;
-					window.setSize(sf::Vector2u(window.getSize().x, 540));
-				}
-
-				if (e.size.width > 2560)
-				{
-					e.size.width = 2560;
-					window.setSize(sf::Vector2u(2560, window.getSize().y));
-				}
-
-				if (e.size.height > 1440)
-				{
-					e.size.height = 1440;
-					window.setSize(sf::Vector2u(window.getSize().x, 1440));
-				}
+				resizeHandler(e, window);
 
 				break;
 			}
 
 			case sf::Event::LostFocus:
+				if (gameState != GameState::IN_MAINMENU) game.setPause(true);
 				break;
 
 			case sf::Event::GainedFocus:
+				if (gameState != GameState::IN_MAINMENU) game.setPause(false);
 				break;
 
 			case sf::Event::MouseButtonPressed:
 			{
-				if (e.mouseButton.button == sf::Mouse::Left)
+				switch (gameState)
 				{
-					if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
+				case GameState::IN_MAINMENU:
+				{
+					if (e.mouseButton.button == sf::Mouse::Left)
 					{
-						std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
+						if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
+						{
+							//std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
+							game.setGameState(GameState::IN_LEVEL);
+						}
+						break;
 					}
 					break;
 				}
+				case GameState::IN_LEVEL:
+				{
+					if (e.mouseButton.button == sf::Mouse::Left)
+					{
+						plr.jump();
+						break;
+					}
+				}
+				default:
+					break;
+				}
+				
 			}
 
 			case sf::Event::KeyPressed:
@@ -145,13 +192,21 @@ int main()
 				}
 				else if (e.key.code == sf::Keyboard::Space)
 				{
-					break;
+					if (gameState == GameState::IN_LEVEL)
+					{
+						if (e.mouseButton.button == sf::Mouse::Left)
+						{
+							plr.jump();
+							break;
+						}
+					}
 				}
 				else if (e.key.code == sf::Keyboard::F3)
 				{
 					game.toggleFPSCounter();
 					break;
 				}
+				break;
 			}
 			default:
 				break;
@@ -160,19 +215,8 @@ int main()
 	}
 
 	/*
-	sf::Vector2u windowSize = window.getSize();
-
-	Level mainLvl("res/data/levels/0.json", windowSize);
-
-	unsigned int windWidth = windowSize.x;
-	unsigned int windHeight = windowSize.y;
-
-	Player plr("res/img/000.png", 0.25f, window);
-
 	while (window.isOpen())
 	{
-		if (game.isEnded()) return -1;
-
 		sf::Event e;
 
 		windowSize = window.getSize();
@@ -189,79 +233,6 @@ int main()
 		window.draw(fpsTxt);
 		plr.update(window, frames, game.isPaused());
 		window.display();
-
-		while (window.pollEvent(e))
-		{
-			switch (e.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-
-			case sf::Event::Resized:
-			{
-				if (e.size.width < 960)
-				{
-					e.size.width = 960;
-					window.setSize(sf::Vector2u(960, window.getSize().y));
-				}
-
-				if (e.size.height < 540)
-				{
-					e.size.height = 540;
-					window.setSize(sf::Vector2u(window.getSize().x, 540));
-				}
-
-				if (e.size.width > 2560)
-				{
-					e.size.width = 2560;
-					window.setSize(sf::Vector2u(2560, window.getSize().y));
-				}
-
-				if (e.size.height > 1440)
-				{
-					e.size.height = 1440;
-					window.setSize(sf::Vector2u(window.getSize().x, 1440));
-				}
-
-				Output::log("New WIDTH: " + std::to_string(e.size.width) + ", New HEIGHT: " + std::to_string(e.size.height));
-				break;
-			}
-
-			case sf::Event::LostFocus:
-				game.setPause(true);
-				break;
-
-			case sf::Event::GainedFocus:
-				game.setPause(false);
-				break;
-
-			case sf::Event::MouseButtonPressed:
-			{
-				if (e.mouseButton.button == sf::Mouse::Left)
-				{
-					plr.jump();
-					break;
-				}
-			}
-
-			case sf::Event::KeyPressed:
-			{
-				if (e.key.code == sf::Keyboard::Escape)
-				{
-					window.close();
-					break;
-				}
-				else if (e.key.code == sf::Keyboard::Space)
-				{
-					plr.jump();
-					break;
-				}
-			}
-			default:
-				break;
-			}
-		}
 	}
 	*/
 

@@ -41,7 +41,8 @@ void MainMenu::update(sf::RenderWindow &window)
 
 void MainMenu::playBGM()
 {
-	_bgMusic.play();
+	if (_bgMusic.getStatus() == sf::SoundSource::Stopped || _bgMusic.getStatus() == sf::SoundSource::Paused)
+		_bgMusic.play();
 }
 
 void MainMenu::stopBGM()

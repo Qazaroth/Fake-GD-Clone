@@ -3,7 +3,9 @@
 // Private
 
 // Public
-Game::Game() {}
+Game::Game() 
+{
+}
 Game::~Game() {}
 
 void Game::setPause(bool isPaused)
@@ -19,4 +21,9 @@ void Game::setEnded(bool isEnded)
 void Game::toggleFPSCounter()
 {
 	_showFPSCounter = !_showFPSCounter;
+}
+
+void Game::setGameState(GameState state)
+{
+	_state = state;
 }

@@ -101,15 +101,17 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 
 	if (_plr.getPosition().y < _plrDefaultPosY && !isPaused)
 	{
-		float f = 0.0f;
+		float f = 1.0f;
+		float k = 1.0f;
+		/*
 		if (frames <= 30) f = 30.0f;
 		else if (frames > 30 && frames <= 60) f = 60.0f;
 		else if (frames > 60 && frames <= 120) f = 120.0f;
 		else f = 144.0f;
 
-		float k = (config.getFPSCap() == 0) ? f : config.getFPSCap();
+		k = (config.getFPSCap() == 0) ? f : config.getFPSCap();*/
 
-		_plr.move(0.0f, (1.25f * (f / k)));
+		_plr.move(0.0f, (1.25f * (1.25) * (f / k)));
 		_plr.rotate(_plrDefaultRotateSpeed);
 	}
 
@@ -122,7 +124,10 @@ void Player::update(sf::RenderWindow &window, int frames, bool isPaused)
 	{
 		_plr.setPosition(_plr.getPosition().x, _plrDefaultPosY);
 	}
+}
 
+void Player::draw(sf::RenderWindow &window)
+{
 	window.draw(_plr);
 }
 

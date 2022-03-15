@@ -39,6 +39,7 @@ public:
 	~Player();
 
 	void update(sf::RenderWindow &window, int frames, bool isPaused = false);
+	void draw(sf::RenderWindow &window);
 	void jump();
 
 	bool collideWith(Objects::Block &block);

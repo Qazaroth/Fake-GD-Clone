@@ -3,8 +3,9 @@
 // Private
 void Button::setup()
 {
-	_btnScale.x = 1.125f;
-	_btnScale.y = 1.125f;
+	_btnScale = sf::Vector2f(1.125f, 1.125f);
+	//_btnScale.x = 1.125f;
+	//_btnScale.y = 1.125f;
 	if (!_btnTex.loadFromFile(_imgPath))
 	{
 		std::cout << "[ERROR] Error occured while loading play texture file!" << std::endl;
