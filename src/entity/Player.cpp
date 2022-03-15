@@ -59,7 +59,7 @@ Player::Player(std::string texturePath, sf::Vector2f scale, sf::RenderWindow &wi
 
 Player::~Player() {}
 
-void Player::update(sf::RenderWindow &window, int frames, Game game)
+void Player::update(sf::RenderWindow &window, int frames, Game &game)
 {
 	Configs config;
 
@@ -133,6 +133,11 @@ void Player::update(sf::RenderWindow &window, int frames, Game game)
 	{
 		_plr.setPosition(_plrDefaultPosX, _plrDefaultPosY);
 	}
+}
+
+void Player::reset()
+{
+	_plr.setPosition(_plrDefaultPosX, _plrDefaultPosY);
 }
 
 void Player::draw(sf::RenderWindow &window)

@@ -130,6 +130,13 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 	bool isMusicPlaying = _bgMusic.getStatus() == sf::SoundSource::Playing;
 
+	if (game.getGameState() != GameState::IN_LEVEL)
+	{
+		_lvlTimer = 0;
+		_renderBlocks.clear();
+		window.clear();
+	}
+
 	if (_IsInit)
 	{
 		window.draw(_background);

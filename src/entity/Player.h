@@ -38,7 +38,8 @@ public:
 	Player(std::string texturePath, sf::Vector2f scale, sf::RenderWindow &window);
 	~Player();
 
-	void update(sf::RenderWindow &window, int frames, Game game);
+	void reset();
+	void update(sf::RenderWindow &window, int frames, Game &game);
 	void draw(sf::RenderWindow &window);
 	void jump();
 

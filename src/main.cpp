@@ -22,7 +22,7 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
-std::string VERSION = "2.1.1-Beta";
+std::string VERSION = "2.1.2-Beta";
 std::string TITLE = "Fake GD Clone [" + VERSION + "]";
 sf::VideoMode windowDimension(defaultWidth, defaultHeight);
 
@@ -32,6 +32,7 @@ utils::Timer timer;
 Text fpsText("res/fonts/arial.ttf", "0 FPS");
 
 std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+sf::Uint32 styleFlag = sf::Style::Default | sf::Style::Fullscreen;
 
 float timerCounter = 0;
 unsigned int frames = 0;
@@ -66,8 +67,7 @@ void resizeHandler(sf::Event e, sf::RenderWindow &window)
 int main()
 {
 	fpsText.setCharacterSize(24);
-	sf::Uint32 mStyleFlag = sf::Style::Default | sf::Style::Fullscreen;
-	sf::RenderWindow window(VModes.at(0), TITLE, mStyleFlag); //window(windowDimension, TITLE, sf::Style::Default);
+	sf::RenderWindow window(VModes.at(0), TITLE, styleFlag); //window(windowDimension, TITLE, sf::Style::Default);
 	window.setFramerateLimit(config.getFPSCap());
 
 	sf::Vector2u windowSize = window.getSize();
@@ -93,6 +93,7 @@ int main()
 		{
 		case GameState::IN_MAINMENU:
 			mainLvl.stopBGMusic();
+			plr.reset();
 			mainMenu.playBGM();
 			mainMenu.update(window);
 			break;
@@ -143,7 +144,6 @@ int main()
 			case sf::Event::Resized:
 			{
 				resizeHandler(e, window);
-
 				break;
 			}
 
@@ -206,11 +206,8 @@ int main()
 				{
 					if (gameState == GameState::IN_LEVEL)
 					{
-						if (e.mouseButton.button == sf::Mouse::Left)
-						{
-							plr.jump();
-							break;
-						}
+						plr.jump();
+						break;
 					}
 				}
 				else if (e.key.code == sf::Keyboard::F3)
