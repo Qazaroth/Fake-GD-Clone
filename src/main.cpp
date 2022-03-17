@@ -126,15 +126,6 @@ int main()
 		if (game.showFPS()) window.draw(fpsText.getSFText());
 		window.display();
 
-		frames++;
-		if (timer.elapsed() - timerCounter > 1.0f)
-		{
-			timerCounter += 1.0f;
-			if (game.showFPS()) fpsText.setText(std::to_string(frames) + " FPS");
-			printf("%d FPS\n", frames);
-			frames = 0;
-		}
-
 		while (window.pollEvent(e))
 		{
 			switch (e.type)
@@ -148,48 +139,33 @@ int main()
 				resizeHandler(e, window);
 				break;
 			}
-
 			case sf::Event::LostFocus:
 				if (gameState != GameState::IN_MAINMENU) game.setPause(true);
 				break;
-
 			case sf::Event::GainedFocus:
 				if (gameState != GameState::IN_MAINMENU) game.setPause(false);
 				break;
-
 			case sf::Event::MouseButtonPressed:
-			{
 				switch (gameState)
 				{
 				case GameState::IN_MAINMENU:
 				{
-					if (e.mouseButton.button == sf::Mouse::Left)
+					if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
 					{
-						if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
-						{
-							//std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
-							game.setGameState(GameState::IN_LEVEL);
-						}
-						break;
+						//std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
+						game.setGameState(GameState::IN_LEVEL);
 					}
 					break;
 				}
 				case GameState::IN_LEVEL:
 				{
-					if (e.mouseButton.button == sf::Mouse::Left)
-					{
-						plr.jump();
-						break;
-					}
+					plr.jump();
+					break;
 				}
 				default:
 					break;
 				}
-				
-			}
-
 			case sf::Event::KeyPressed:
-			{
 				if (e.key.code == sf::Keyboard::Escape)
 				{
 					switch (gameState)
@@ -202,50 +178,50 @@ int main()
 						window.close();
 						break;
 					}
-					
 				}
 				else if (e.key.code == sf::Keyboard::Space)
 				{
 					if (gameState == GameState::IN_LEVEL)
-					{
 						plr.jump();
-						break;
-					}
 				}
-				else if (e.key.code == sf::Keyboard::F3)
-				{
-					game.toggleFPSCounter();
-					break;
-				}
+				else if (e.key.code == sf::Keyboard::F3) game.toggleFPSCounter();
 				break;
-			}
 			default:
 				break;
 			}
 		}
+
+		frames++;
+		if (timer.elapsed() - timerCounter > 1.0f)
+		{
+			timerCounter += 1.0f;
+			if (game.showFPS()) fpsText.setText(std::to_string(frames) + " FPS");
+			printf("%d FPS\n", frames);
+			frames = 0;
+		}
 	}
-
-	/*
-	while (window.isOpen())
-	{
-		sf::Event e;
-
-		windowSize = window.getSize();
-		windWidth = windowSize.x;
-		windHeight = windowSize.y;
-
-		//sf::Vector2i m = sf::Mouse::getPosition(window);
-
-		//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
-		//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
-
-		window.clear(sf::Color::White);
-		mainLvl.update(window, plr, game);
-		window.draw(fpsTxt);
-		plr.update(window, frames, game.isPaused());
-		window.display();
-	}
-	*/
 
 	return 0;
 }
+
+/*
+while (window.isOpen())
+{
+	sf::Event e;
+
+	windowSize = window.getSize();
+	windWidth = windowSize.x;
+	windHeight = windowSize.y;
+
+	//sf::Vector2i m = sf::Mouse::getPosition(window);
+
+	//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
+	//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
+
+	window.clear(sf::Color::White);
+	mainLvl.update(window, plr, game);
+	window.draw(fpsTxt);
+	plr.update(window, frames, game.isPaused());
+	window.display();
+}
+*/

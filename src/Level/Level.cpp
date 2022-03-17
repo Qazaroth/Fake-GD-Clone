@@ -63,7 +63,7 @@ void Level::setup()
 			
 			if (posYStr == "height")
 			{
-				posY = _windowSize.y - config.getFloorSize().y;
+				posY = _windowSize.y - config.getFloorSize().y - 75.0f;
 				isYRelative = true;
 			}
 		}
@@ -285,7 +285,21 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 				//sf::Vector2f newPos(-b.getSize(), 0.0f);
 
 				window.draw(b.getObject());
-				if (plr.collideWith(b)) game.setEnded(true);
+				int plrCollision = plr.collideWith(b);
+				std::cout << plrCollision << std::endl;
+				if (plrCollision > -1 && plrCollision != 2)
+				{
+					// std::cout << plrCollision << std::endl;
+					//  game.setEnded(true);
+				}
+				else
+				{
+					if (plrCollision == 2)
+					{
+						std::cout << plrCollision << std::endl;
+						game.setPause(true);
+					}
+				}
 			}
 		}
 
@@ -315,7 +329,7 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 						if (posYStr == "height")
 						{
-							posY = _windowSize.y - config.getFloorSize().y;
+							posY = _windowSize.y - config.getFloorSize().y - 75.0f;
 						}
 					}
 
@@ -327,6 +341,21 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 					}
 					_objects.erase(obj);
 				}
+				/*
+				for (auto o = _objects.begin(); o != _objects.end(); o++)
+				{
+					auto obj = (*o);
+
+					int type = std::stoi(getDataOfObject(o->second, 0));
+					int posT = std::stoi(getDataOfObject(o->second, 1));
+					std::string posYStr = getDataOfObject(o->second, 2);
+					auto posY = std::stoi(getDataOfObject(o->second, 3));
+					std::string isYRelativeStr = getDataOfObject(o->second, 4);
+					bool isYRelative;
+
+					//if (_bgMusic.)
+				}
+				*/
 			}
 			else _bgMusic.play();
 		}

@@ -105,17 +105,14 @@ void Player::update(sf::RenderWindow &window, int frames, Game &game)
 
 		if (_plr.getPosition().y < _plrDefaultPosY && !isPaused)
 		{
-			float f = 1.0f;
+			float f = 1.0f; //frames;
 			float k = 1.0f;
-			/*
-			if (frames <= 30) f = 30.0f;
-			else if (frames > 30 && frames <= 60) f = 60.0f;
-			else if (frames > 60 && frames <= 120) f = 120.0f;
-			else f = 144.0f;
+			
+			//k = (config.getFPSCap() == 0) ? f : config.getFPSCap();
 
-			k = (config.getFPSCap() == 0) ? f : config.getFPSCap();*/
+			float gravity = (1.25f * (1.25) * (125 / 50)) * 0.5;
 
-			_plr.move(0.0f, (1.25f * (1.25) * (125/50) * (f / k)));
+			_plr.move(0.0f, gravity);
 			_plr.rotate(_plrDefaultRotateSpeed);
 		}
 
@@ -151,15 +148,39 @@ void Player::jump()
 {
 	if (!_isJumping)
 	{
-		_plr.move(sf::Vector2f(0.0f, _jumpForce));
+		_plr.move(sf::Vector2f(0.0f, _jumpForce * 1.5));
 		_isJumping = true;
 	}
 }
 
-bool Player::collideWith(Objects::Block &block)
+int Player::collideWith(Objects::Block &block)
 {
 	sf::FloatRect plrGlobalBounds = _plr.getGlobalBounds();
 	sf::FloatRect blockGlobalBounds = block.getObject().getGlobalBounds();
 
-	return plrGlobalBounds.intersects(blockGlobalBounds);
+	float blkTop = blockGlobalBounds.top;
+	float blkLeft = blockGlobalBounds.left;
+	float blkWidth = blockGlobalBounds.width;
+	float blkHeight = blockGlobalBounds.height;
+	
+	sf::FloatRect _top(blkLeft, blkTop, blkWidth, blkHeight / 2);
+	sf::FloatRect _bot(blkLeft, blkTop + (blkHeight / 2), blkWidth, blkHeight / 2);
+	sf::FloatRect _left(blkLeft, blkTop, blkWidth / 2, blkHeight);
+	sf::FloatRect _right(blkLeft + (blkWidth / 2), blkTop, blkWidth, blkHeight / 2);
+
+	if (plrGlobalBounds.intersects(_left)) return 0;
+	else if (plrGlobalBounds.intersects(_right)) return 1;
+	else if (plrGlobalBounds.intersects(_top)) return 2;
+	else if (plrGlobalBounds.intersects(_bot)) return 3;
+	else return -1;
+
+	/*
+	if (blockGlobalBounds.intersects(_left)) return 0;
+	else if (blockGlobalBounds.intersects(_right)) return 1;
+	else if (blockGlobalBounds.intersects(_top)) return 2;
+	else if (blockGlobalBounds.intersects(_bot)) return 3;
+	else return -1;
+	*/
+
+	//return plrGlobalBounds.intersects(blockGlobalBounds);
 }

@@ -11,14 +11,14 @@ namespace Objects
 		_block.setOutlineThickness(1.0f);
 		_block.setOutlineColor(sf::Color::White);
 
-		std::cout << (_block.getPosition().x > _windSize.x - _size) << std::endl;
+		std::cout << (_block.getPosition().x > _windSize.x - _block.getGlobalBounds().width) << std::endl;
 
-		if ((_block.getPosition().x > _windSize.x - _size) || (_block.getPosition().x < 0)) 
+		if ((_block.getPosition().x < 0)) //(_block.getPosition().x > _windSize.x - _block.getGlobalBounds().width) || )
 		{
 			_block.setPosition(_size, _block.getPosition().y);
 		}
 
-		if ((_block.getPosition().y > _windSize.y - _size) || (_block.getPosition().y < 0))
+		if ((_block.getPosition().y > _windSize.y - _block.getGlobalBounds().height) || (_block.getPosition().y < 0))
 		{
 			_block.setPosition(_block.getPosition().x, _size);
 		}
