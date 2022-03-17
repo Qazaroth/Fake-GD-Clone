@@ -61,6 +61,7 @@ public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
 
+	void randomize();
 	void move(sf::Vector2f velocity, Game game);
 
 	void reloadData();

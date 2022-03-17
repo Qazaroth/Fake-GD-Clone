@@ -111,6 +111,57 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
+void Level::randomize()
+{
+	Configs config;
+	srand(time(NULL));
+
+	_renderBlocks.clear();
+	if (_objects.size() > 0)
+	{
+		std::map<int, std::list<std::string>> _newObjects;
+
+		unsigned int pnSeed = 0 + (std::rand() % (999999 - 0 + 1));
+
+		std::cout << pnSeed << std::endl;
+
+		for (auto i = _objects.begin(); i != _objects.end(); i++)
+		{
+			int type = std::stoi(getDataOfObject(i->second, 0));
+			int posT = std::stoi(getDataOfObject(i->second, 1));
+			std::string posYStr = getDataOfObject(i->second, 2);
+			auto posY = std::stoi(getDataOfObject(i->second, 3));
+			std::string isYRelativeStr = getDataOfObject(i->second, 4);
+			bool isYRelative;
+
+			// returns false on bad input
+			std::istringstream(isYRelativeStr) >> isYRelative;
+
+			if (isYRelative)
+			{
+				std::transform(posYStr.begin(), posYStr.end(), posYStr.begin(), [](unsigned char c) { return std::tolower(c); });
+
+				if (posYStr == "height")
+				{
+					posY = _windowSize.y - config.getFloorSize().y;
+				}
+			}
+			int min = 0;
+			int max = _windowSize.y - config.getFloorSize().y;
+			int y = min + (std::rand() % (max - min + 1));
+			std::cout << y << std::endl;
+			//PerlinNoise pn; // (pnSeed);
+			//double k = pn.noise(posT, posY, 1);
+			//std::cout << k << std::endl;
+		}
+
+		_objects = _newObjects;
+	}
+	//resetLevel();
+
+	
+}
+
 void Level::move(sf::Vector2f velocity, Game game)
 {
 	if (_renderBlocks.size() > 0 && !(game.isPaused()))

@@ -74,6 +74,7 @@ int main()
 
 	Level mainLvl("res/data/levels/0.json", windowSize);
 	MainMenu mainMenu(window.getSize());
+	//mainLvl.randomize();
 
 	unsigned int windWidth = windowSize.x;
 	unsigned int windHeight = windowSize.y;
