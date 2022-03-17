@@ -19,8 +19,8 @@ private:
 
 	bool _isJumping = false;
 
-	int _plrDefaultOffsetX = 5;
-	int _plrDefaultOffsetY = 39;
+	int _plrDefaultOffsetX = 50;
+	int _plrDefaultOffsetY = 40;
 	float _plrDefaultPosX = 0.0f;
 	float _plrDefaultPosY = 0.0f;
 
@@ -28,7 +28,7 @@ private:
 	float _windowHeight = 0.0f;
 
 	float _plrDefaultRotateSpeed = 8.0f;
-	float _testVeloX = 3.0f;
+	float _testVeloX = 0.0f;
 	sf::Vector2f _velocity;
 
 	float _jumpForce = -100.0f;

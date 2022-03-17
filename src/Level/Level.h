@@ -51,12 +51,17 @@ private:
 	sf::Sprite _background;
 	sf::Texture _bgTexture;
 
+	float defaultLevelSpeed = -1.5f;
+	float levelSpeed = 1.0f;
+
 	void setup();
 
 	std::string getDataOfObject(std::list<std::string> values, int index);
 public:
 	Level(std::string levelPath, sf::Vector2u windowSize);
 	~Level();
+
+	void move(sf::Vector2f velocity, Game game);
 
 	void reloadData();
 	void resetLevel();

@@ -111,6 +111,28 @@ Level::Level(std::string levelPath, sf::Vector2u windowSize)
 
 Level::~Level() {}
 
+void Level::move(sf::Vector2f velocity, Game game)
+{
+	if (_renderBlocks.size() > 0 && !(game.isPaused()))
+	{
+		std::list<Objects::Block> _newRenderBlocks;
+
+		for (auto i = _renderBlocks.begin(); i != _renderBlocks.end(); i++) 
+		{
+			Objects::Block b = (*i);
+
+			float limit = 0 - (b.getSize() / 1);
+
+			if (b.getObject().getPosition().x > limit)
+			{
+				b.move(sf::Vector2f(defaultLevelSpeed * levelSpeed, 0.0f));
+				_newRenderBlocks.push_back(b);
+			}
+		}
+		_renderBlocks = _newRenderBlocks;
+	}
+}
+
 void Level::reloadData()
 {
 	Configs config;
@@ -136,7 +158,7 @@ void Level::reloadData()
 
 			if (posYStr == "height")
 			{
-				posY = _windowSize.y - config.getFloorSize().y;
+				posY = _windowSize.y - config.getFloorSize().y - 75.0f;
 				isYRelative = true;
 			}
 		}
@@ -189,7 +211,10 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 		_lvlTimer = 0;
 		_renderBlocks.clear();
 		window.clear();
+		return;
 	}
+
+	move(sf::Vector2f(-5.0f, 0.0f), game);
 
 	if (_IsInit)
 	{
@@ -205,11 +230,9 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 				std::advance(e, i);
 
 				Objects::Block b = (*e);
+				//b.getObject().setPosition(b.getPosition().x - 10.0f, b.getPosition().y);
 				//sf::Vector2f newPos(-b.getSize(), 0.0f);
 
-				sf::FloatRect blockGlobalBounds = b.getObject().getGlobalBounds();
-
-				//b.move(newPos);
 				window.draw(b.getObject());
 				if (plr.collideWith(b)) game.setEnded(true);
 			}
@@ -247,7 +270,7 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 					if (type == 0)
 					{
-						Objects::Block block(_windowSize.x - 100, posY, _windowSize);
+						Objects::Block block(_windowSize.x - 75.0f, posY, _windowSize);
 						_renderBlocks.push_back(block);
 						window.draw(block.getObject());
 					}

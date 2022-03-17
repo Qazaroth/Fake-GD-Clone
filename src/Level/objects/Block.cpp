@@ -45,5 +45,11 @@ namespace Objects
 		_y = velocity.y;
 
 		_block.move(velocity);
+		//_block.setPosition(_block.getPosition());
+	}
+
+	bool Block::operator==(Block const &other)
+	{
+		return (this->_block.getPosition() == other._block.getPosition());
 	}
 }
