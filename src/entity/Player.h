@@ -27,6 +27,8 @@ private:
 	float _windowWidth = 0.0f;
 	float _windowHeight = 0.0f;
 
+	float _oldY = 0.0f;
+
 	float _plrDefaultRotateSpeed = 8.0f;
 	float _testVeloX = 0.0f;
 	sf::Vector2f _velocity;

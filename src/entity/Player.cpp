@@ -23,6 +23,7 @@ void Player::setup()
 	_plrDefaultPosX = _plrDefaultOffsetX + ((_texture.getSize().x * _scale.x) / 2);
 	_plrDefaultPosY = (_windowHeight - configs.getFloorSize().y) - (_texture.getSize().y * _scale.y) + _plrDefaultOffsetY;
 	sf::Vector2f plrDefaultPos(_plrDefaultPosX, _plrDefaultPosY);
+	_oldY = plrDefaultPos.y;
 
 	_plr.setPosition(plrDefaultPos);
 }
@@ -103,26 +104,21 @@ void Player::update(sf::RenderWindow &window, int frames, Game &game)
 			_velocity.x = -_testVeloX;//((5.0f / defaultWidth) * windWidth);
 		}
 
-		if (_plr.getPosition().y < _plrDefaultPosY && !isPaused)
+		if ((_plr.getPosition().y < _oldY) && !isPaused)
 		{
-			float f = 1.0f; //frames;
-			float k = 1.0f;
-			
-			//k = (config.getFPSCap() == 0) ? f : config.getFPSCap();
-
 			float gravity = (1.25f * (1.25) * (125 / 50)) * 0.5;
 
 			_plr.move(0.0f, gravity);
-			_plr.rotate(_plrDefaultRotateSpeed);
+			//_plr.rotate(_plrDefaultRotateSpeed);
 		}
 
-		if (_plr.getPosition().y == _plrDefaultPosY)
+		if (!_isJumping || _plr.getPosition().y == _oldY)
 		{
 			_isJumping = false;
 			_plr.setRotation(0.0f);
 		}
 
-		if (_plr.getPosition().y > _plrDefaultPosY)
+		if (_plr.getPosition().y >= _windowHeight)
 		{
 			_plr.setPosition(_plr.getPosition().x, _plrDefaultPosY);
 		}
@@ -158,18 +154,22 @@ int Player::collideWith(Objects::Block &block)
 	sf::FloatRect plrGlobalBounds = _plr.getGlobalBounds();
 	sf::FloatRect blockGlobalBounds = block.getObject().getGlobalBounds();
 
-	float plrY = _plr.getPosition().y;
-
 	if (plrGlobalBounds.intersects(blockGlobalBounds))
 	{
-		float blockY = block.getObject().getPosition().y - block.getSize();
+		float blockY = block.getObject().getPosition().y - (block.getSize() * 0.9);
 		float heightDiff = blockY - (_plr.getPosition().y);
 
-		//std::cout << _plr.getPosition().y << std::endl;
-		//std::cout << heightDiff << std::endl;
+		std::cout << "Height diff: " << heightDiff << std::endl;
 
-		return (heightDiff < -22.0f && heightDiff >= -112.0f) ? 2 : 1;
+		_oldY = _plr.getPosition().y;
+		_isJumping = false;
+
+		bool isValidHeightDiff = heightDiff <= -27.5f && heightDiff >= -32.0f;
+
+		if (isValidHeightDiff) return 2;
+		else return 1;
 	}
-	
+
+	_oldY = _plrDefaultPosY;
 	return 0;
 }

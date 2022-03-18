@@ -10,7 +10,17 @@
     },
     {
       "type": 0,
+      "pos_T": 3.5,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
       "pos_T": 4,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 4.5,
       "pos_Y": "height"
     },
     {

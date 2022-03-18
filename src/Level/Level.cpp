@@ -51,7 +51,7 @@ void Level::setup()
 		auto val = i.value();
 
 		int type = val["type"];
-		int posT = val["pos_T"];
+		float posT = val["pos_T"];
 		std::string posYStr;
 		int posY = 0;
 		bool isYRelative = false;
@@ -285,10 +285,17 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 				window.draw(b.getObject());
 				int plrCollision = plr.collideWith(b);
-
+				if (plrCollision > 0) std::cout << plrCollision << std::endl;
 				if (plrCollision == 2)
 				{
-					plr.setPosition(plr.getPlayer().getPosition().x, b.getPosition().y - b.getSize());
+					float newPlrX = plr.getPlayer().getPosition().x;
+					float newPlrY = b.getPosition().y - b.getSize() / 2;
+					plr.setPosition(newPlrX, newPlrY);
+				}
+				else if (plrCollision == 1)
+				{
+					std::cout << "Player died!" << std::endl;
+					game.setEnded(true);
 				}
 			}
 		}
@@ -302,7 +309,7 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 					auto obj = _objects.find(_lvlTimer);
 
 					int type = std::stoi(getDataOfObject(obj->second, 0));
-					int posT = std::stoi(getDataOfObject(obj->second, 1));
+					float posT = std::stof(getDataOfObject(obj->second, 1));
 					std::string posYStr = getDataOfObject(obj->second, 2);
 					auto posY = std::stoi(getDataOfObject(obj->second, 3));
 					std::string isYRelativeStr = getDataOfObject(obj->second, 4);

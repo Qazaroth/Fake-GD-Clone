@@ -22,6 +22,8 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
+#define DEBUGGING
+
 std::string VERSION = "2.1.2-Beta";
 std::string TITLE = "Fake GD Clone [" + VERSION + "]";
 sf::VideoMode windowDimension(defaultWidth, defaultHeight);
@@ -32,7 +34,12 @@ utils::Timer timer;
 Text fpsText("res/fonts/arial.ttf", "0 FPS");
 
 std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+
+#ifdef DEBUGGING
+sf::Uint32 styleFlag = sf::Style::Default;
+#else
 sf::Uint32 styleFlag = sf::Style::Default | sf::Style::Fullscreen;
+#endif
 
 float timerCounter = 0;
 unsigned int frames = 0;
@@ -83,7 +90,10 @@ int main()
 
 	while (window.isOpen())
 	{		
-		if (game.isEnded()) return -1;
+		if (game.isEnded())
+		{
+			return -1;
+		}
 
 		sf::Event e;
 		sf::Vector2i m = sf::Mouse::getPosition(window);
@@ -152,7 +162,6 @@ int main()
 				{
 					if (mainMenu.getPlayBtn().isMouseOnBtn(m, window))
 					{
-						//std::cout << mainMenu.getPlayBtn().isMouseOnBtn(m, window) << std::endl;
 						game.setGameState(GameState::IN_LEVEL);
 					}
 					break;
@@ -203,25 +212,3 @@ int main()
 
 	return 0;
 }
-
-/*
-while (window.isOpen())
-{
-	sf::Event e;
-
-	windowSize = window.getSize();
-	windWidth = windowSize.x;
-	windHeight = windowSize.y;
-
-	//sf::Vector2i m = sf::Mouse::getPosition(window);
-
-	//std::cout << "X: " << m.x << ", Y: " << m.y << std::endl;
-	//std::cout << (plrTexture.getSize().y * plr.getScale().y) << std::endl;
-
-	window.clear(sf::Color::White);
-	mainLvl.update(window, plr, game);
-	window.draw(fpsTxt);
-	plr.update(window, frames, game.isPaused());
-	window.display();
-}
-*/
