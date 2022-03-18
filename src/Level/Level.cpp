@@ -273,6 +273,8 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 		_windowSize = window.getSize();
 
+		_lvlTimer = _bgMusic.getPlayingOffset().asSeconds();
+
 		if (_renderBlocks.size() > 0)
 		{
 			for (int i = 0; i < _renderBlocks.size(); i++)
@@ -307,8 +309,6 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 		{
 			if (isMusicPlaying)
 			{
-				_lvlTimer++;
-
 				if (_objects.count(_lvlTimer))
 				{
 					auto obj = _objects.find(_lvlTimer);

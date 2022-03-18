@@ -5,12 +5,12 @@
   "objects": [
     {
       "type": 0,
-      "pos_T": 566,
+      "pos_T": 5,
       "pos_Y": 160
     },
     {
       "type": 0,
-      "pos_T": 1800,
+      "pos_T": 10,
       "pos_Y": "height"
     }
   ]
