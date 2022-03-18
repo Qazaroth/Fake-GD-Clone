@@ -25,7 +25,7 @@ namespace Objects
 		inline float getSize() { return _size; }
 
 		inline sf::RectangleShape getObject() { return _block; }
-		inline sf::Vector2f getPosition() { return sf::Vector2f(_x, _y); }
+		inline sf::Vector2f getPosition() { return _block.getPosition(); }
 
 		bool operator== (Block const &other);
 	};

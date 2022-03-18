@@ -265,14 +265,13 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 		return;
 	}
 
-	move(sf::Vector2f(-5.0f, 0.0f), game);
-
 	if (_IsInit)
 	{
+		move(sf::Vector2f(-5.0f, 0.0f), game);
+
 		window.draw(_background);
 
 		_windowSize = window.getSize();
-
 		_lvlTimer = _bgMusic.getPlayingOffset().asSeconds();
 
 		if (_renderBlocks.size() > 0)
@@ -283,24 +282,13 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 				std::advance(e, i);
 
 				Objects::Block b = (*e);
-				//b.getObject().setPosition(b.getPosition().x - 10.0f, b.getPosition().y);
-				//sf::Vector2f newPos(-b.getSize(), 0.0f);
 
 				window.draw(b.getObject());
 				int plrCollision = plr.collideWith(b);
-				std::cout << plrCollision << std::endl;
-				if (plrCollision > -1 && plrCollision != 2)
+
+				if (plrCollision == 2)
 				{
-					// std::cout << plrCollision << std::endl;
-					//  game.setEnded(true);
-				}
-				else
-				{
-					if (plrCollision == 2)
-					{
-						std::cout << plrCollision << std::endl;
-						game.setPause(true);
-					}
+					plr.setPosition(plr.getPlayer().getPosition().x, b.getPosition().y - b.getSize());
 				}
 			}
 		}

@@ -12,7 +12,7 @@ private:
 	unsigned int _defaultWidth = 1920;
 	unsigned int _defaultHeight = 1080;
 
-	unsigned int _fpsCap = 60;
+	unsigned int _fpsCap = 144;
 
 	bool _enabledVSync = false;
 

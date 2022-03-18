@@ -33,13 +33,6 @@ private:
 
 	float _jumpForce = -100.0f;
 
-	/*
-	sf::FloatRect _top;
-	sf::FloatRect _bot;
-	sf::FloatRect _left;
-	sf::FloatRect _right;
-	*/
-
 	void setup();
 public:
 	Player(std::string texturePath, float scale, sf::RenderWindow &window);
@@ -60,6 +53,7 @@ public:
 	*/
 	int collideWith(Objects::Block &block);
 
+	void setPosition(float x, float y) { _plr.setPosition(sf::Vector2f(x, y)); };
 	void setJumpForce(float jumpForce) { _jumpForce = jumpForce; }
 	void setWindowWidth(float windowWidth) { _windowWidth = windowWidth; }
 	void setWindowHeight(float windowHeight) { _windowHeight = windowHeight; }

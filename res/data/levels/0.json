@@ -5,8 +5,38 @@
   "objects": [
     {
       "type": 0,
+      "pos_T": 3,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 4,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
       "pos_T": 5,
-      "pos_Y": 160
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 6,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 7,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 8,
+      "pos_Y": "height"
+    },
+    {
+      "type": 0,
+      "pos_T": 9,
+      "pos_Y": "height"
     },
     {
       "type": 0,

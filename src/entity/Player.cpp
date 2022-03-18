@@ -158,40 +158,18 @@ int Player::collideWith(Objects::Block &block)
 	sf::FloatRect plrGlobalBounds = _plr.getGlobalBounds();
 	sf::FloatRect blockGlobalBounds = block.getObject().getGlobalBounds();
 
-	float blkTop = blockGlobalBounds.top;
-	float blkLeft = blockGlobalBounds.left;
-	float blkWidth = blockGlobalBounds.width;
-	float blkHeight = blockGlobalBounds.height;
+	float plrY = _plr.getPosition().y;
+
+	if (plrGlobalBounds.intersects(blockGlobalBounds))
+	{
+		float blockY = block.getObject().getPosition().y - block.getSize();
+		float heightDiff = blockY - (_plr.getPosition().y);
+
+		//std::cout << _plr.getPosition().y << std::endl;
+		//std::cout << heightDiff << std::endl;
+
+		return (heightDiff < -22.0f && heightDiff >= -112.0f) ? 2 : 1;
+	}
 	
-	sf::FloatRect _top(blkLeft, blkTop, blkWidth, blkHeight / 2);
-	sf::FloatRect _bot(blkLeft, blkTop + (blkHeight / 2), blkWidth, blkHeight / 2);
-	sf::FloatRect _left(blkLeft, blkTop, blkWidth / 2, blkHeight);
-	sf::FloatRect _right(blkLeft + (blkWidth / 2), blkTop, blkWidth, blkHeight / 2);
-
-	if (plrGlobalBounds.intersects(blockGlobalBounds) && _plr.getPosition().y >= block.getPosition().y)
-	{
-		return 1;
-	}
-	else
-	{
-		return -1;
-	}
-
-	/*
-	if (plrGlobalBounds.intersects(_left)) return 0;
-	else if (plrGlobalBounds.intersects(_right)) return 1;
-	else if (plrGlobalBounds.intersects(_top)) return 2;
-	else if (plrGlobalBounds.intersects(_bot)) return 3;
-	else return -1;
-	*/
-
-	/*
-	if (blockGlobalBounds.intersects(_left)) return 0;
-	else if (blockGlobalBounds.intersects(_right)) return 1;
-	else if (blockGlobalBounds.intersects(_top)) return 2;
-	else if (blockGlobalBounds.intersects(_bot)) return 3;
-	else return -1;
-	*/
-
-	//return plrGlobalBounds.intersects(blockGlobalBounds);
+	return 0;
 }
