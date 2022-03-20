@@ -1,5 +1,7 @@
 #include "Level.h"
 
+Text attemptText("res/fonts/arial.ttf", "Attempt 0");
+
 //Private
 void Level::setup()
 {
@@ -86,8 +88,13 @@ void Level::setup()
 		//std::cout << "[" << key << "] " << val << std::endl;
 	}
 
+	sf::Vector2f textPos(75.0f, (_windowSize.y/2) + (_windowSize.y/8));
+	attemptText.setCharacterSize(96);
+	attemptText.setPosition(textPos);
+
 	Output::log("Succesfully loaded level!");
 	_IsInit = true;
+	_firstLoad = true;
 }
 
 std::string Level::getDataOfObject(std::list<std::string> values, int index)
@@ -233,12 +240,25 @@ void Level::reloadData()
 	}
 }
 
-void Level::resetLevel()
+void Level::resetLevel(bool plrdied)
 {
 	stopBGMusic();
+	attemptText.setText("Attempt 0");
+	attemptText.setCharacterSize(96);
 	_objects.clear();
 	_renderBlocks.clear();
 	_lvlTimer = 0;
+
+	if (plrdied)
+	{
+		_attempts++;
+		attemptText.setText("Attempt " + std::to_string(_attempts));
+		std::cout << "Attempt: " << (_attempts + 1) << std::endl;
+	}
+	else
+	{
+		_attempts = 0;
+	}
 }
 
 void Level::stopBGMusic()
@@ -249,6 +269,20 @@ void Level::stopBGMusic()
 void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 {
 	Configs config;
+
+	_windowSize = window.getSize();
+
+	if (_firstLoad)
+	{
+		std::cout << "Attempt: " << (_attempts + 1) << std::endl;
+		_firstLoad = false;
+	}
+
+	if (_lvlTimer >= 2.0f)
+	{
+		attemptText.setText("");
+		attemptText.setCharacterSize(0);
+	}
 
 	if (_objects.empty())
 		reloadData();
@@ -270,8 +304,7 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 		move(sf::Vector2f(-5.0f, 0.0f), game);
 
 		window.draw(_background);
-
-		_windowSize = window.getSize();
+		window.draw(attemptText.getSFText());
 		_lvlTimer = _bgMusic.getPlayingOffset().asSeconds();
 
 		if (_renderBlocks.size() > 0)
@@ -285,7 +318,7 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 
 				window.draw(b.getObject());
 				int plrCollision = plr.collideWith(b);
-				if (plrCollision > 0) std::cout << plrCollision << std::endl;
+				//if (plrCollision > 0) std::cout << plrCollision << std::endl;
 				if (plrCollision == 2)
 				{
 					float newPlrX = plr.getPlayer().getPosition().x;
@@ -295,7 +328,8 @@ void Level::update(sf::RenderWindow &window, Player &plr, Game &game)
 				else if (plrCollision == 1)
 				{
 					std::cout << "Player died!" << std::endl;
-					game.setEnded(true);
+					resetLevel(true);
+					plr.reset();
 				}
 			}
 		}

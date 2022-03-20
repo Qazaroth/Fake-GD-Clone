@@ -20,6 +20,7 @@ public:
 	Text(std::string fontPath, std::string defaultText);
 	~Text();
 
+	void setPosition(sf::Vector2f position);
 	void setText(std::string newText);
 	void setCharacterSize(int charSize);
 	void setFillColor(sf::Color color);

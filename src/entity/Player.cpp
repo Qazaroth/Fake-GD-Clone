@@ -132,6 +132,7 @@ void Player::update(sf::RenderWindow &window, int frames, Game &game)
 
 void Player::reset()
 {
+	_oldY = _plrDefaultPosY;
 	_plr.setPosition(_plrDefaultPosX, _plrDefaultPosY);
 }
 
@@ -159,7 +160,7 @@ int Player::collideWith(Objects::Block &block)
 		float blockY = block.getObject().getPosition().y - (block.getSize() * 0.9);
 		float heightDiff = blockY - (_plr.getPosition().y);
 
-		std::cout << "Height diff: " << heightDiff << std::endl;
+		//std::cout << "Height diff: " << heightDiff << std::endl;
 
 		_oldY = _plr.getPosition().y;
 		_isJumping = false;

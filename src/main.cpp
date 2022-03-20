@@ -22,9 +22,9 @@
 #define defaultHeight 1080
 #define defaultWidth 1920
 
-#define DEBUGGING
+//#define DEBUGGING
 
-std::string VERSION = "2.1.2-Beta";
+std::string VERSION = "2.2.0-Beta";
 std::string TITLE = "Fake GD Clone [" + VERSION + "]";
 sf::VideoMode windowDimension(defaultWidth, defaultHeight);
 
@@ -46,29 +46,33 @@ unsigned int frames = 0;
 
 void resizeHandler(sf::Event e, sf::RenderWindow &window)
 {
-	if (e.size.width < 960)
+#ifdef DEBUGGING
+	if (e.size.width <= 960)
 	{
 		e.size.width = 960;
 		window.setSize(sf::Vector2u(960, window.getSize().y));
 	}
 
-	if (e.size.height < 540)
+	if (e.size.height <= 540)
 	{
 		e.size.height = 540;
 		window.setSize(sf::Vector2u(window.getSize().x, 540));
 	}
 
-	if (e.size.width > 2560)
+	if (e.size.width >= 2560)
 	{
 		e.size.width = 2560;
 		window.setSize(sf::Vector2u(2560, window.getSize().y));
 	}
 
-	if (e.size.height > 1440)
+	if (e.size.height >= 1440)
 	{
 		e.size.height = 1440;
 		window.setSize(sf::Vector2u(window.getSize().x, 1440));
 	}
+#else
+	window.setSize(sf::Vector2u(e.size.width, e.size.height));
+#endif
 }
 
 int main()

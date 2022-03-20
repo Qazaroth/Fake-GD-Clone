@@ -51,8 +51,12 @@ private:
 	sf::Sprite _background;
 	sf::Texture _bgTexture;
 
+	int _attempts = 0;
+
 	float defaultLevelSpeed = -1.5f;
 	float levelSpeed = 1.0f;
+
+	bool _firstLoad = true;
 
 	void setup();
 
@@ -65,7 +69,7 @@ public:
 	void move(sf::Vector2f velocity, Game game);
 
 	void reloadData();
-	void resetLevel();
+	void resetLevel(bool plrDied = false);
 
 	void stopBGMusic();
 

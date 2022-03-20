@@ -26,6 +26,11 @@ Text::Text(std::string fontPath, std::string defaultText) : _fontPath(fontPath),
 
 Text::~Text() {}
 
+void Text::setPosition(sf::Vector2f position)
+{
+	_text.setPosition(position);
+}
+
 void Text::setText(std::string newText)
 {
 	_text.setString(newText);
